@@ -10,6 +10,8 @@ import { MainSectionComponent } from './main-section/main-section.component';
 import { BottomSectionComponent } from './bottom-section/bottom-section.component';
 import { LoginComponent } from './login/login.component';
 import { LoginFormComponent } from './login-form/login-form.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { LoginFormComponent } from './login-form/login-form.component';
     MainSectionComponent,
     BottomSectionComponent,
     LoginComponent,
-    LoginFormComponent
+    LoginFormComponent,
+    NotFoundComponent,
+    HomePageComponent
   ],
   imports: [
     BrowserModule,
