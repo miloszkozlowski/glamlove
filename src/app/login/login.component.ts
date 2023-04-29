@@ -3,8 +3,6 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styles: ['.add-height {height: 3rem} ']
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
-
-}
+export class LoginComponent {}

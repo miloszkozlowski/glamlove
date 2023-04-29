@@ -1,24 +1,44 @@
 <h3>Logowanie</h3>
-<div class="container mb-5">
-  <div class="row mt-4">
-    <div class="col col-form-label-sm">
-      <label for="login_username" class="form-label">
-        Adres e-mail
-      </label>
-      <input class="form-control form-control-sm" id="login_username" type="text">
+<div class="container mb-5 p-0 p-md-1">
+  <div class="text-center p-3" *ngIf="isLoadingLogin">
+    <div class="spinner-border text-primary m-5" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  <div class="row">
-    <div class="col col-form-label-sm">
-      <label for="login_password" class="form-label">
-        Hasło
-      </label>
-      <input class="form-control form-control-sm" id="login_password" type="password">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" *ngIf="!isLoadingLogin">
+    <div class="row mt-4">
+      <div class="col col-form-label-sm">
+        <label for="login_email" class="form-label">
+          Adres e-mail
+        </label>
+        <input
+          class="form-control form-control-sm"
+          id="login_email"
+          type="email"
+          formControlName="email"
+          autocomplete="username"
+          appAutoFocus
+        >
+      </div>
     </div>
-  </div>
-  <div class="row mt-1 float-end">
-    <div class="col">
-      <button class="btn btn-primary btn-sm" type="button">Zaloguj się</button>
+    <div class="row">
+      <div class="col col-form-label-sm">
+        <label for="login_password" class="form-label">
+          Hasło
+        </label>
+        <input
+          class="form-control form-control-sm"
+          id="login_password"
+          type="password"
+          formControlName="password"
+          autocomplete="current-password"
+        >
+      </div>
     </div>
-  </div>
+    <div class="row mt-1 float-end">
+      <div class="col">
+        <button class="btn btn-primary btn-sm" type="submit" [disabled]="!loginForm.valid">Zaloguj się</button>
+      </div>
+    </div>
+  </form>
 </div>

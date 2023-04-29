@@ -1,0 +1,11 @@
+input.ng-invalid.ng-touched {
+  @import "./node_modules/bootstrap/scss/functions";
+  @import "./node_modules/bootstrap/scss/variables";
+  @import "./node_modules/bootstrap/scss/mixins";
+  border: {
+    bottom-color: $danger;
+    bottom-width: 0.2rem;
+    left-color: $danger;
+    left-width: 0.05rem;
+  }
+}

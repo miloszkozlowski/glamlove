@@ -12,6 +12,10 @@ import { LoginComponent } from './login/login.component';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import {HttpClientModule} from "@angular/common/http";
+import { ToastComponent } from './toast/toast.component';
+import {AutoFocusDirective} from "./service/auto-focus.directive";
 
 @NgModule({
   declarations: [
@@ -23,12 +27,16 @@ import { HomePageComponent } from './home-page/home-page.component';
     LoginComponent,
     LoginFormComponent,
     NotFoundComponent,
-    HomePageComponent
+    HomePageComponent,
+    ToastComponent,
+    AutoFocusDirective
   ],
   imports: [
     BrowserModule,
     NgbModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
