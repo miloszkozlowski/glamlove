@@ -6,7 +6,6 @@ import {BehaviorSubject} from "rxjs";
 
 @Injectable({providedIn: "root"})
 export class AuthService {
-
   authenticatedUserSubject: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(UserModel.getGuest());
   private _isAuthenticated: boolean;
   private jwtService: JwtHelperService;

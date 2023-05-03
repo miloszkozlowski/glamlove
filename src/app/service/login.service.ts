@@ -10,6 +10,7 @@ import {AuthService} from "./auth.service";
 @Injectable({providedIn: "root"})
 export class LoginService {
   loginStatusSubject: Subject<boolean> = new Subject();
+  urlToRedirect: string;
 
   constructor(
     private http: HttpClient,
@@ -46,6 +47,8 @@ export class LoginService {
     this.loginStatusSubject.next(true);
     this.authService.storeUserData(userAuth);
     localStorage.setItem('userData', JSON.stringify(userAuth));
-    this.router.navigate(['']).then();
+    console.log(this.urlToRedirect);
+    // this.router.navigateByUrl(this.urlToRedirect).then();
+    this.router.navigate(['/admin']);
   }
 }
