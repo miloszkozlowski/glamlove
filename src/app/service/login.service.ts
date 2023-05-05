@@ -6,6 +6,7 @@ import {catchError, Observable, Subject, throwError} from "rxjs";
 import {ToastNotificationService} from "./toast-notification.service";
 import {Router} from "@angular/router";
 import {AuthService} from "./auth.service";
+import {UserModel} from "../model/user.model";
 
 @Injectable({providedIn: "root"})
 export class LoginService {
@@ -45,10 +46,9 @@ export class LoginService {
 
   handleSuccessfulLogin(userAuth: UserAuthDataModel) {
     this.loginStatusSubject.next(true);
-    this.authService.storeUserData(userAuth);
+    this.authService.storeUserData(new UserModel(userAuth));
     localStorage.setItem('userData', JSON.stringify(userAuth));
     console.log(this.urlToRedirect);
-    // this.router.navigateByUrl(this.urlToRedirect).then();
     this.router.navigate(['/admin']);
   }
 }

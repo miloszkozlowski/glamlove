@@ -1,0 +1,70 @@
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Nowy użytkownik</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center p-3" *ngIf="isLoadingForm">
+          <div class="spinner-border text-primary m-5" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div *ngIf="!isLoadingForm && currentMode === 'mobile-activation-code'">
+          <h3>Potwierdź numer telefonu</h3>
+          <p>Na wskazany numer <strong class="text-primary">{{registeredUser.mobileNo}}</strong> wysłaliśmy wiadomość z 6-cyfrowym kodem. Przepisz go poniżej:</p>
+          <form [formGroup]="mobileCode" #inputs>
+            <div class="d-flex justify-content-center align-items-center">
+            <input class="boxed" type="text" maxlength="1" pattern="[0-9]*" [formControlName]="0" #code>
+            <input class="boxed" type="text" maxlength="1" pattern="[0-9]*" [formControlName]="1" #code>
+            <input class="boxed" type="text" maxlength="1" pattern="[0-9]*" [formControlName]="2" #code>
+            <input class="boxed" type="text" maxlength="1" pattern="[0-9]*" [formControlName]="3" #code>
+            <input class="boxed" type="text" maxlength="1" pattern="[0-9]*" [formControlName]="4" #code>
+            <input class="boxed" type="text" maxlength="1" pattern="[0-9]*" [formControlName]="5" #code>
+            </div>
+          </form>
+        </div>
+        <form [formGroup]="newUser" *ngIf="!isLoadingForm && currentMode === 'new-user-form'">
+          <div class="alert alert-danger alert-dismissible" role="alert" *ngIf="errorMessage">   <div>{{errorMessage}}</div>   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+          <div class="mb-3">
+            <label for="firstName" class="form-label">Imię</label>
+            <input type="text" class="form-control" id="firstName" formControlName="firstName" appAutoFocus>
+          </div>
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Nazwisko</label>
+            <input type="text" class="form-control" id="lastName" formControlName="lastName">
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" formControlName="email">
+          </div>
+          <div class="mb-3">
+            <label for="phoneNo" class="form-label">Numer telefonu</label>
+            <input pattern="[0-9]*" type="text" class="form-control" id="phoneNo" formControlName="phone-no">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Hasło</label>
+            <input type="password" class="form-control" id="password" formControlName="password">
+          </div>
+          <div class="mb-3">
+            <label for="passwordConfirmation" class="form-label">Powtórz hasło</label>
+            <input type="password" class="form-control" id="passwordConfirmation" formControlName="password-confirmation">
+          </div>
+          <div class="mb-3">
+            <label formArrayName="roles" *ngFor="let role of arrayRoles.controls; let i = index">
+              <div class="me-3">
+                <input type="checkbox" [formControlName]="i">
+                {{roles[i].name}}
+              </div>
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" *ngIf="currentMode !== 'mobile-activation-code'">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="isLoadingForm">Wyjdź</button>
+        <button type="button" class="btn btn-primary" (click)="handleNewUser()" [disabled]="!newUser.valid || isLoadingForm">Zapisz <i class="bi bi-check"></i></button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,3 +16,8 @@ export const authGuard = (
   }
   return true;
 }
+
+export const adminGuard = () => {
+  const authService = inject(AuthService);
+  return authService.isAdminRole;
+}

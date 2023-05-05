@@ -1,6 +1,14 @@
 import {UserAuthDataModel} from "./user-auth-data.model";
 
 const GUEST_EMAIL: string = 'guest@glamlove.pl';
+export interface UserModelAdminMode {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  mobileNo: string;
+  status: string;
+}
 export class UserModel {
 
   public static getGuest(): UserModel {
@@ -22,11 +30,11 @@ export class UserModel {
      }
   }
 
-  get jwtToken() {
+  get jwtToken(): string {
     if(this.expirationOn > new Date()) {
       return this._jwtToken;
     }
-    return undefined;
+    return '';
   }
 
   get isAuthenticated() {

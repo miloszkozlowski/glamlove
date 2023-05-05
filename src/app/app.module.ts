@@ -13,9 +13,13 @@ import { LoginFormComponent } from './login-form/login-form.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { ToastComponent } from './toast/toast.component';
 import {AutoFocusDirective} from "./service/auto-focus.directive";
+import { AdminComponent } from './admin/admin.component';
+import { AdminUsersComponent } from './admin-users/admin-users.component';
+import { AdminNewUserComponent } from './admin-new-user/admin-new-user.component';
+import {TokenInterceptor} from "./service/token.interceptor";
 
 @NgModule({
   declarations: [
@@ -29,7 +33,10 @@ import {AutoFocusDirective} from "./service/auto-focus.directive";
     NotFoundComponent,
     HomePageComponent,
     ToastComponent,
-    AutoFocusDirective
+    AutoFocusDirective,
+    AdminComponent,
+    AdminUsersComponent,
+    AdminNewUserComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +45,9 @@ import {AutoFocusDirective} from "./service/auto-focus.directive";
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, multi: true, useClass: TokenInterceptor}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

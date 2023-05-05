@@ -13,8 +13,8 @@ export class AuthService {
     this.jwtService = new JwtHelperService(this.authenticatedUserSubject.getValue().jwtToken);
   }
 
-  storeUserData(userData: UserAuthDataModel) {
-    this.authenticatedUserSubject.next(new UserModel(userData));
+  storeUserData(user: UserModel) {
+    this.authenticatedUserSubject.next(user);
     this._isAuthenticated = true;
   }
 
@@ -31,12 +31,30 @@ export class AuthService {
       return;
     }
     const userAuth: UserAuthDataModel = JSON.parse(userString);
-    this.storeUserData(userAuth);
+    const user: UserModel = new UserModel(userAuth);
+    if(!user.jwtToken) {
+      console.warn('Expired token');
+      this.logout();
+      return;
+    }
+    this.storeUserData(user);
     console.warn('Auto logged in');
 
   }
 
+  get barerToken() {
+    return this.authenticatedUserSubject.getValue().jwtToken;
+  }
+
   get isAuthenticated() {
     return this._isAuthenticated;
+  }
+
+  get isAdminRole() {
+    const decodedToken = this.jwtService.decodeToken(this.authenticatedUserSubject.getValue().jwtToken);
+    if(!decodedToken.roles) {
+      return false;
+    }
+    return decodedToken.roles.includes('ADMIN');
   }
 }
