@@ -3,9 +3,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">Nowy użytkownik</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="handleClearAll()"></button>
       </div>
       <div class="modal-body">
+        <div class="alert alert-danger alert-dismissible" role="alert" *ngIf="errorMessage">   <div>{{errorMessage}}</div>   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
         <div class="text-center p-3" *ngIf="isLoadingForm">
           <div class="spinner-border text-primary m-5" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -13,7 +14,7 @@
         </div>
         <div *ngIf="!isLoadingForm && currentMode === 'mobile-activation-code'">
           <h3>Potwierdź numer telefonu</h3>
-          <p>Na wskazany numer <strong class="text-primary">{{registeredUser.mobileNo}}</strong> wysłaliśmy wiadomość z 6-cyfrowym kodem. Przepisz go poniżej:</p>
+          <p>Na wskazany numer <strong class="text-primary">{{registeredUser?.mobileNo}}</strong> wysłaliśmy wiadomość z 6-cyfrowym kodem. Przepisz go poniżej:</p>
           <form [formGroup]="mobileCode" #inputs>
             <div class="d-flex justify-content-center align-items-center">
             <input class="boxed" type="text" maxlength="1" pattern="[0-9]*" [formControlName]="0" #code>
@@ -25,8 +26,13 @@
             </div>
           </form>
         </div>
+        <div *ngIf="currentMode === 'success'" class="pt-5 pb-5 pl-1 pl-1 pl-md-3 pr-1 pr-md-3 container">
+          <div class="row"><div class="col-12 d-flex justify-content-center align-content-center"><i class="bi bi-person-check-fill text-primary" style="font-size: 5rem"></i></div></div>
+          <div class="row"><div class="col-12 d-flex justify-content-center align-content-center"><p class="text-center mb-1">Twoje konto zostało zarejestrowane w serwisie!</p></div></div>
+          <div class="row"><div class="col-12 d-flex justify-content-center align-content-center"><p class="text-help text-center">Zostałeś automatycznie zalogowany - możesz od razu wybrać się na zakupy!</p></div></div>
+          <div class="row"><div class="col-12 d-flex justify-content-center align-content-center"><button class="btn btn-outline-primary btn-lg" data-bs-dismiss="modal" (click)="handleClearAll()">Zamknij</button></div></div>
+        </div>
         <form [formGroup]="newUser" *ngIf="!isLoadingForm && currentMode === 'new-user-form'">
-          <div class="alert alert-danger alert-dismissible" role="alert" *ngIf="errorMessage">   <div>{{errorMessage}}</div>   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
           <div class="mb-3">
             <label for="firstName" class="form-label">Imię</label>
             <input type="text" class="form-control" id="firstName" formControlName="firstName" appAutoFocus>
@@ -61,7 +67,7 @@
           </div>
         </form>
       </div>
-      <div class="modal-footer" *ngIf="currentMode !== 'mobile-activation-code'">
+      <div class="modal-footer" *ngIf="currentMode === 'new-user-form'">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="isLoadingForm">Wyjdź</button>
         <button type="button" class="btn btn-primary" (click)="handleNewUser()" [disabled]="!newUser.valid || isLoadingForm">Zapisz <i class="bi bi-check"></i></button>
       </div>

@@ -29,7 +29,6 @@ export class UserService {
   }
 
   handleError(error: HttpErrorResponse) {
-    console.log('serwis?', error);
     if(!!error) {
       return throwError(() => new Error(this.errorService.handleErrorMessage(error)));
     }
@@ -40,4 +39,13 @@ export class UserService {
     this.usersLoaded.push(...users);
     this.usersLoadedSubject.next(this.usersLoaded);
   }
+
+  validateSmsCode(userId: string, smsCode: string) {
+    return this.http.post<Boolean>(
+      environment.apiUrl + 'user/verify',
+      {userId, smsCode}
+    )
+      .pipe(catchError(this.handleError.bind(this)));
+  }
+
 }

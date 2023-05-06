@@ -2,6 +2,7 @@ import {UserAuthDataModel} from "./user-auth-data.model";
 
 const GUEST_EMAIL: string = 'guest@glamlove.pl';
 export interface UserModelAdminMode {
+  id: string;
   email: string;
   password: string;
   firstName: string;

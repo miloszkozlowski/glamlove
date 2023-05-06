@@ -38,7 +38,7 @@ export class AdminNewUserComponent implements OnInit, AfterContentInit, OnDestro
   errorMessageSub: Subscription;
   errorMessage: string;
   currentMode = 'new-user-form';
-  registeredUser: UserModelAdminMode;
+  registeredUser: UserModelAdminMode | undefined;
   @ViewChildren('code') inputs: QueryList<ElementRef<HTMLInputElement>>;
 
   constructor(
@@ -69,7 +69,7 @@ export class AdminNewUserComponent implements OnInit, AfterContentInit, OnDestro
     this.mobileCode.valueChanges.subscribe((e) => {
       const ff = Number(Object.keys(e).find(k => !e[k]));
       if(isNaN(ff)) {
-        this.checkMobileCode('');
+        this.handleSmsCodeInput();
       }
       this.inputs.get(ff)?.nativeElement?.focus();
     });
@@ -87,10 +87,6 @@ export class AdminNewUserComponent implements OnInit, AfterContentInit, OnDestro
     this.loadRoles();
   }
 
-  checkMobileCode(code: string) {
-    this._isFormLoading = true;
-  }
-
   checkPasswords: ValidatorFn = (group: AbstractControl):  ValidationErrors | null => {
     if(!this.newUser) {
       return null;
@@ -102,6 +98,7 @@ export class AdminNewUserComponent implements OnInit, AfterContentInit, OnDestro
 
   handleNewUser() {
     this._isFormLoading = true;
+    this.errorMessage = '';
     const roles = this.arrayRoles.controls.filter(c => c.value).map(c => this.roles[this.arrayRoles.controls.indexOf(c)].id);
     const request: UserWriteData = {
       email: this.newUser.controls['email'].value,
@@ -114,12 +111,11 @@ export class AdminNewUserComponent implements OnInit, AfterContentInit, OnDestro
     this.userService.registerUser({userdata: request})
       .subscribe((user: UserModelAdminMode) => {
         this._isFormLoading = false;
-        this.toastService.showToast({message: 'Użytkownik zarejestrowany! Dziękujemy!'});
         this.registeredUser = user;
         if(user.status === 'NOT_ACTIVATED') {
-          this.currentMode = 'mobile-activation-code'
+          this.currentMode = 'mobile-activation-code';
         } else {
-          this.currentMode = 'success-info'
+          this.currentMode = 'success';
         }
       });
   }
@@ -150,7 +146,6 @@ export class AdminNewUserComponent implements OnInit, AfterContentInit, OnDestro
   }
 
   private handleHttpError(err: HttpErrorResponse) {
-    console.warn(err);
     let message: string = 'Wystąpił błąd: ';
     if(err.error?.errorCode == 'FORBIDDEN') {
       message = 'Brak autoryzacji';
@@ -159,5 +154,34 @@ export class AdminNewUserComponent implements OnInit, AfterContentInit, OnDestro
     }
     this.toastService.showToast({message, sticky: true, variant: 'danger'});
     return throwError(() => new Error(message));
+  }
+
+  handleSmsCodeInput() {
+    if(Object.values(this.mobileCode.controls).some(c => !c.value) || !this.registeredUser) {
+      return;
+    }
+    const code = Object.values(this.mobileCode.controls).map(c => c.value).join("");
+    this.userService.validateSmsCode(this.registeredUser.id, code).subscribe(result => {
+      if(!result) {
+        this.errorMessage = 'Podano nieprawidłowy kod weryfikujący';
+        this.clearSmsCode();
+      } else {
+        this.currentMode = 'success';
+        this.errorMessage = '';
+      }
+      this._isFormLoading = false;
+    });
+  }
+
+  private clearSmsCode() {
+    Object.values(this.mobileCode.controls).forEach(c => c.setValue(''));
+  }
+
+  handleClearAll() {
+    this.errorMessage = '';
+    this.clearSmsCode();
+    this.currentMode = 'new-user-form';
+    this.registeredUser = undefined;
+    this.newUser.reset();
   }
 }
