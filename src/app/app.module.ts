@@ -21,6 +21,7 @@ import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { AdminNewUserComponent } from './admin-new-user/admin-new-user.component';
 import {TokenInterceptor} from "./service/token.interceptor";
 import {InfiniteScrollModule} from "ngx-infinite-scroll";
+import { AdminUserDetailComponent } from './admin-user-detail/admin-user-detail.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {InfiniteScrollModule} from "ngx-infinite-scroll";
     AutoFocusDirective,
     AdminComponent,
     AdminUsersComponent,
-    AdminNewUserComponent
+    AdminNewUserComponent,
+    AdminUserDetailComponent
   ],
   imports: [
     BrowserModule,

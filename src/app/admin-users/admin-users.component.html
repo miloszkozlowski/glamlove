@@ -27,7 +27,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let user of loadedUsers">
+    <tr *ngFor="let user of loadedUsers" (click)="handleShowDetails(user.id)" class="pointer" data-bs-toggle="modal" data-bs-target="#detailModal">
       <th scope="row">{{user.email}}</th>
       <td>{{user.firstName}}</td>
       <td>{{user.lastName}}</td>
@@ -45,3 +45,4 @@
   <button class="btn btn-secondary btn-sm" (click)="loadMoreUsers()">Pokaż więcej</button>
 </div>
 <app-admin-new-user></app-admin-new-user>
+<app-admin-user-detail [user]="showUserDetail"></app-admin-user-detail>

@@ -13,6 +13,8 @@ export class AdminUsersComponent implements AfterContentChecked {
   canLoadMore = false;
   currentPage = 0;
   currentTab = 'active';
+  showUserDetail: UserModelAdminMode | undefined;
+
 
   constructor(private userService: UserService) {}
 
@@ -53,4 +55,10 @@ export class AdminUsersComponent implements AfterContentChecked {
     return this.currentTab !== dest;
   }
 
+  handleShowDetails(userId: string) {
+    const user = this.loadedUsers.find(u => u.id === userId);
+    if (!!user) {
+      this.showUserDetail = user;
+    }
+  }
 }
