@@ -4,10 +4,9 @@ const GUEST_EMAIL: string = 'guest@glamlove.pl';
 export interface UserModelAdminMode {
   id: string;
   email: string;
-  password: string;
   firstName: string;
   lastName: string;
-  mobileNo: string;
+  mobile: string;
   status: string;
 }
 export class UserModel {

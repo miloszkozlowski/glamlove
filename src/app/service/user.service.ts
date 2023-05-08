@@ -1,9 +1,10 @@
 import {Injectable} from "@angular/core";
 import {BehaviorSubject, catchError, Observable, tap, throwError} from "rxjs";
 import {UserModel, UserModelAdminMode} from "../model/user.model";
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {ErrorHandleService} from "./error-handle.service";
+import {GenericPageModel} from "../model/generic-page.model";
 
 export interface UserWriteData {
   email: string,
@@ -24,6 +25,15 @@ export class UserService {
     return this.http.post<UserModelAdminMode>(
       environment.apiUrl + 'user',
       userdata
+    )
+      .pipe(catchError(this.handleError.bind(this)));
+  }
+
+  loadUsersPage(page: number, active: boolean): Observable<GenericPageModel<UserModelAdminMode>> {
+    const params = new HttpParams().set('active', active);
+    return this.http.get<GenericPageModel<UserModelAdminMode>>(
+      environment.apiUrl + 'user/' + page,
+      {params}
     )
       .pipe(catchError(this.handleError.bind(this)));
   }

@@ -9,6 +9,12 @@ input.ng-invalid.ng-touched {
     left-width: 0.05rem;
   }
 }
+input:focus {
+  border-color: #70656f;
+  border-style: solid;
+  border-width: 0.1rem;
+  box-shadow: 0 0 15px #70656f;
+}
 .boxed {
   width: 2.4rem;
   height: 3.1rem;

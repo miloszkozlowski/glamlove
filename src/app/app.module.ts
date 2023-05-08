@@ -20,6 +20,7 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { AdminNewUserComponent } from './admin-new-user/admin-new-user.component';
 import {TokenInterceptor} from "./service/token.interceptor";
+import {InfiniteScrollModule} from "ngx-infinite-scroll";
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {TokenInterceptor} from "./service/token.interceptor";
     NgbModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    InfiniteScrollModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TokenInterceptor}

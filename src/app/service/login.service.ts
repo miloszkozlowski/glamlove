@@ -33,7 +33,6 @@ export class LoginService {
   handleHttpError(error: any): Observable<UserAuthDataModel> {
     console.warn(error);
     if (error.statusText === 'OK' && error.status === 401) {
-      console.log('tak');
       this.handleLoginFailed();
       this.toastService.showToast({message: 'Podane dane logowania niestety nie są poprawne. Spróbuj jeszcze raz.', variant: 'danger'});
     }
@@ -48,7 +47,6 @@ export class LoginService {
     this.loginStatusSubject.next(true);
     this.authService.storeUserData(new UserModel(userAuth));
     localStorage.setItem('userData', JSON.stringify(userAuth));
-    console.log(this.urlToRedirect);
     this.router.navigate(['/admin']);
   }
 }

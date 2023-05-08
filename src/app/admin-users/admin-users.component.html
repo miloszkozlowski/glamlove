@@ -1,5 +1,47 @@
-<h3>Użytkownicy</h3>
+<h3 class="mt-2 mb-3">Użytkownicy</h3>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
   Nowy <i class="bi bi-person-add"></i>
 </button>
+<ul class="nav nav-tabs pt-3">
+  <li class="nav-item">
+    <a [ngClass]="isNotCurrentTab('active') ? 'nav-link' : 'nav-link active'" (click)="changeTabTo($event, 'active')" aria-current="page" href="">Aktywni</a>
+  </li>
+  <li class="nav-item">
+    <a [ngClass]="isNotCurrentTab('inactive') ? 'nav-link' : 'nav-link active'" (click)="changeTabTo($event, 'inactive')" href >Nieaktywni</a>
+  </li>
+</ul>
+<div
+  infinite-scroll
+  [infiniteScrollDistance]="210"
+  [infiniteScrollThrottle]="500"
+  (scrolled)="loadMoreUsers()"
+>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">E-mail</th>
+      <th scope="col">Imię</th>
+      <th scope="col">Nazwisko</th>
+      <th scope="col">Telefon</th>
+      <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of loadedUsers">
+      <th scope="row">{{user.email}}</th>
+      <td>{{user.firstName}}</td>
+      <td>{{user.lastName}}</td>
+      <td>{{user.mobile}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div class="text-center" *ngIf="loading">
+  <div class="spinner-border text-primary m-5" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div class="text-center" *ngIf="canLoadMore && !loading">
+  <button class="btn btn-secondary btn-sm" (click)="loadMoreUsers()">Pokaż więcej</button>
+</div>
 <app-admin-new-user></app-admin-new-user>

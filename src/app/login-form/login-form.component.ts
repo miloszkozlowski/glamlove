@@ -35,8 +35,6 @@ export class LoginFormComponent implements OnInit {
     this.loginForm.markAllAsTouched();
     const email = this.loginForm.controls['email'].value;
     const password = this.loginForm.controls['password'].value;
-    console.log(email);
-    console.log(password);
     this.isLoadingLogin = true;
     this.loginService.postLoginRequest({email, password});
   }

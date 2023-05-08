@@ -14,7 +14,7 @@
         </div>
         <div *ngIf="!isLoadingForm && currentMode === 'mobile-activation-code'">
           <h3>Potwierdź numer telefonu</h3>
-          <p>Na wskazany numer <strong class="text-primary">{{registeredUser?.mobileNo}}</strong> wysłaliśmy wiadomość z 6-cyfrowym kodem. Przepisz go poniżej:</p>
+          <p>Na wskazany numer <strong class="text-primary">{{registeredUser?.mobile}}</strong> wysłaliśmy wiadomość z 6-cyfrowym kodem. Przepisz go poniżej:</p>
           <form [formGroup]="mobileCode" #inputs>
             <div class="d-flex justify-content-center align-items-center">
             <input class="boxed" type="text" maxlength="1" pattern="[0-9]*" [formControlName]="0" #code>
