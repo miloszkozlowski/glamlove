@@ -12,7 +12,7 @@ import { LoginComponent } from './login/login.component';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { HomePageComponent } from './home-page/home-page.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { ToastComponent } from './toast/toast.component';
 import {AutoFocusDirective} from "./service/auto-focus.directive";
@@ -22,6 +22,8 @@ import { AdminNewUserComponent } from './admin-new-user/admin-new-user.component
 import {TokenInterceptor} from "./service/token.interceptor";
 import {InfiniteScrollModule} from "ngx-infinite-scroll";
 import { AdminUserDetailComponent } from './admin-user-detail/admin-user-detail.component';
+import { PanelComponent } from './panel/panel.component';
+import { PanelCategoriesComponent } from './panel-categories/panel-categories.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { AdminUserDetailComponent } from './admin-user-detail/admin-user-detail.
     AdminComponent,
     AdminUsersComponent,
     AdminNewUserComponent,
-    AdminUserDetailComponent
+    AdminUserDetailComponent,
+    PanelComponent,
+    PanelCategoriesComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,8 @@ import { AdminUserDetailComponent } from './admin-user-detail/admin-user-detail.
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    InfiniteScrollModule
+    InfiniteScrollModule,
+    FormsModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TokenInterceptor}

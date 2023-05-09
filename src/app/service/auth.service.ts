@@ -57,4 +57,12 @@ export class AuthService {
     }
     return decodedToken.roles.includes('ADMIN');
   }
+
+  get isStaffRole() {
+    const decodedToken = this.jwtService.decodeToken(this.authenticatedUserSubject.getValue().jwtToken);
+    if(!decodedToken.roles) {
+      return false;
+    }
+    return decodedToken.roles.includes('ADMIN') || decodedToken.roles.includes('STAFF');
+  }
 }

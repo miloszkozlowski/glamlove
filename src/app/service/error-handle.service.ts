@@ -7,6 +7,7 @@ import {Subject} from "rxjs";
 export class ErrorHandleService {
 
   errorMessageSubject = new Subject<string>();
+  stopLoadingSubject = new Subject();
 
   constructor(private toastService: ToastNotificationService) {}
 
@@ -21,6 +22,7 @@ export class ErrorHandleService {
     } else {
       this.toastService.showToast({message, sticky: true, variant: 'danger'});
     }
+    this.stopLoadingSubject.next({});
     return message;
   }
 }

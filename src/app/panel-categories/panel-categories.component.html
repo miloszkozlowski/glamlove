@@ -1,0 +1,44 @@
+<h4 class="mt-4">Drzewo kategorii</h4>
+<div class="text-center p-3" *ngIf="isLoading">
+  <div class="spinner-border text-primary m-5" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<div class="mt-2" *ngIf="!isLoading">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item" [ngClass]="{
+        'active': cat === currentCategory
+      }" *ngFor="let cat of categoriesPath">
+        <a href="#" (click)="openCategory(cat.id, $event)" *ngIf="currentCategory !== cat">
+          {{cat.name}}
+        </a>
+        <span *ngIf="cat === currentCategory" class="me-2">{{cat.name}}</span>
+        <button class="btn btn-secondary btn-sm" *ngIf="!newMode && cat === this.currentCategory" (click)="toggleNewMode()">
+          <i class="bi bi-plus-circle"></i>
+        </button>
+      </li>
+    </ol>
+  </nav>
+    <form *ngIf="newMode" (ngSubmit)="handleNewCategory()">
+      <div class="mb-3 row">
+        <div class="col">
+          <input type="text" class="form-control form-control-sm" name="newCat" id="newCat" placeholder="Podaj nazwę nowej kategorii..." appAutoFocus [(ngModel)]="newCategoryName">
+        </div>
+        <div class="col btn-group btn-group-sm">
+          <button type="button" class="btn btn-sm btn-danger mr-1" (click)="toggleNewMode()"><i class="bi bi-backspace"></i></button>
+          <button type="submit" class="btn btn-sm btn-outline-primary">Zapisz</button>
+        </div>
+      </div>
+    </form>
+  <ul class="list-group">
+    <li class="pointer list-group-item list-group-item-action d-flex justify-content-between align-items-center" *ngFor="let cat of currentCategory.children" (click)="openCategory(cat.id, $event)">
+      {{cat.name}}
+<!--      <span class="badge bg-primary rounded-pill">14</span>-->
+      <div class="btn-group btn-group-sm">
+        <button class="btn btn-sm btn-primary" (click)="handleAddProduct(cat.id, $event)">Dodaj produkt</button>
+        <button class="btn btn-sm btn-danger" (click)="handleRemoveCategory(cat.id, $event)">Usuń</button>
+      </div>
+    </li>
+  </ul>
+</div>

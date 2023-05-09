@@ -21,3 +21,8 @@ export const adminGuard = () => {
   const authService = inject(AuthService);
   return authService.isAdminRole;
 }
+
+export const staffGuard = () => {
+  const authService = inject(AuthService);
+  return authService.isStaffRole
+}
