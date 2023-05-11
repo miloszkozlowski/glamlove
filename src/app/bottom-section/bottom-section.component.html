@@ -22,6 +22,7 @@
         <ul class="nav flex-column">
           <li class="nav-item mb-2" *ngIf="!isAuth"><a routerLink="/login" class="nav-link p-0 text-muted">Zaloguj się</a></li>
           <li class="nav-item mb-2" *ngIf="isAuth"><a href="#" (click)="handleLogout()" class="nav-link p-0 text-muted">Wyloguj się</a></li>
+          <li class="nav-item mb-2" *ngIf="isStaff"><a routerLink="/panel" class="nav-link p-0 text-muted">Panel Obsługi</a></li>
           <li class="nav-item mb-2" *ngIf="isAuth"><a [routerLink]="['account', 'orders']" class="nav-link p-0 text-muted">Twoje zamówienia</a></li>
           <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Kontakt</a></li>
           <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Regulamin</a></li>

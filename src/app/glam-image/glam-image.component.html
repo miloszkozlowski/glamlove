@@ -1,0 +1,2 @@
+<img src="assets/images/thumb_placeholder.png" *ngIf="!isLoaded || !picture" alt="Pobieram..." class="card-img-top" [ngClass]="{'placeholder': !!picture?.pictureId}">
+<img [src]="imgUrl" (load)="isLoaded = true" [alt]="picture.id" [id]="picture.id" class="card-img-top" [hidden]="!isLoaded || !picture" *ngIf="!!picture">

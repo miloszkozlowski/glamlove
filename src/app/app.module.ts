@@ -24,6 +24,11 @@ import {InfiniteScrollModule} from "ngx-infinite-scroll";
 import { AdminUserDetailComponent } from './admin-user-detail/admin-user-detail.component';
 import { PanelComponent } from './panel/panel.component';
 import { PanelCategoriesComponent } from './panel-categories/panel-categories.component';
+import { PanelProductsComponent } from './panel-products/panel-products.component';
+import { PanelProductEditComponent } from './panel-product-edit/panel-product-edit.component';
+import {TextTruncatePipe} from "./service/text-truncate.pipe";
+import { PanelProductsImagesComponent } from './panel-products-images/panel-products-images.component';
+import { GlamImageComponent } from './glam-image/glam-image.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +48,12 @@ import { PanelCategoriesComponent } from './panel-categories/panel-categories.co
     AdminNewUserComponent,
     AdminUserDetailComponent,
     PanelComponent,
-    PanelCategoriesComponent
+    PanelCategoriesComponent,
+    PanelProductsComponent,
+    PanelProductEditComponent,
+    TextTruncatePipe,
+    PanelProductsImagesComponent,
+    GlamImageComponent
   ],
   imports: [
     BrowserModule,

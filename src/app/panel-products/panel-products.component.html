@@ -1,0 +1,41 @@
+<h4 class="mt-4">Produkty</h4>
+<div class="mt-2" *ngIf="!isLoading">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productEdit">
+    Dodaj nowy produkt <i class="bi bi-database-add"></i>
+  </button>
+</div>
+
+<div
+  infinite-scroll
+  [infiniteScrollDistance]="210"
+  [infiniteScrollThrottle]="500"
+  (scrolled)="loadMoreProducts()"
+>
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-12 col-sm-6 col-lg-4 mt-1 mb-1" *ngFor="let prod of productsLoaded">
+        <div class="card pointer" (click)="handleEditProduct(prod.id)" data-bs-toggle="modal" data-bs-target="#productEdit">
+          <app-glam-image [thumbnail]="true" [picture]="prod.mainPicture!" class="card-img-top"></app-glam-image>
+          <div class="card-body">
+            <h5 class="card-title">{{prod.name}}</h5>
+            <p class="text-help">{{prod.category.name}}</p>
+            <p class="card-text">{{prod.description | truncate:[100]}}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" (click)="handleImages(prod.id, $event)" data-bs-toggle="modal" data-bs-target="#productImages">
+              Zdjęcia
+              <span class="badge bg-primary rounded-pill">{{prod.allPictures ? prod.allPictures.length : 0}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="text-center p-3" *ngIf="isLoading">
+  <div class="spinner-border text-primary m-5" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<app-panel-product-edit (edited)="updateEditedProduct($event)"></app-panel-product-edit>
+<app-panel-products-images></app-panel-products-images>

@@ -10,8 +10,7 @@ import {ErrorHandleService} from "../service/error-handle.service";
 
 @Component({
   selector: 'app-panel-categories',
-  templateUrl: './panel-categories.component.html',
-  styleUrls: ['./panel-categories.component.scss']
+  templateUrl: './panel-categories.component.html'
 })
 export class PanelCategoriesComponent implements OnInit, AfterContentInit, OnDestroy {
   newMode = false;

@@ -1,0 +1,66 @@
+<div class="modal fade" id="productEdit" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="productEdit" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Nowy produkt w sklepie</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="handleClearAll()" #closeModal></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger alert-dismissible" role="alert" *ngIf="errorMessage">   <div>{{errorMessage}}</div>   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+        <div class="alert alert-primary alert-dismissible" role="alert" *ngIf="successMessage">   <div>{{successMessage}}</div>   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+        <div class="text-center p-3" *ngIf="isLoadingForm">
+          <div class="spinner-border text-primary m-5" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div *ngIf="!isLoadingForm && currentMode === 'new'">
+          <p>Tutaj dodasz produkt (nazwa, opis etc.). Żeby produkt był widoczny w sklepie należy dodać sztuki w magazynie.</p>
+          <form [formGroup]="productForm">
+            <div class="mb-2">
+              <label for="productName" class="form-label">Nazwa główna produktu</label>
+              <input
+                id="productName"
+                type="text"
+                class="form-control"
+                formControlName="productName"
+                [ngClass]="{'is-invalid': !productForm.controls['productName'].valid && productForm.controls['productName'].touched}"
+                autofocus
+              >
+            </div>
+            <div class="mb-2">
+              <label for="productCategory" class="form-label">Kategoria przypisania</label>
+              <input
+                id="productCategory"
+                type="text"
+                class="form-control"
+                placeholder="Zacznij wpisywać..."
+                formControlName="productCategory"
+                [ngClass]="{
+                'is-invalid': !productForm.controls['productCategory'].valid && productForm.controls['productCategory'].touched,
+                'is-valid': !!selectedCategory
+                }"
+                >
+              <div class="col list-group input-search-results" *ngIf="foundCategories.length > 0">
+                <a href="#" class="list-group-item list-group-item-action" *ngFor="let cat of foundCategories" [id]="cat.id" (click)="handleCategoryChoice(cat.id, $event)">{{cat.name}}</a>
+              </div>
+            </div>
+            <div class="mb-2">
+              <label for="productDescription" class="form-label">Pełny opis</label>
+              <textarea
+                id="productDescription"
+                rows="6"
+                class="form-control"
+                formControlName="productDescription"
+                [ngClass]="{'is-invalid': !productForm.controls['productDescription'].valid && productForm.controls['productDescription'].touched}"
+              ></textarea>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer" *ngIf="currentMode === 'new'">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" [disabled]="isLoadingForm" (click)="handleClearAll()">Wyjdź</button>
+        <button type="button" class="btn btn-primary" (click)="handleSave()" [disabled]="!productForm.valid || isLoadingForm || !selectedCategory">Zapisz <i class="bi bi-check"></i></button>
+      </div>
+    </div>
+  </div>
+</div>

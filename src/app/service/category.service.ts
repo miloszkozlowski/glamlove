@@ -33,13 +33,20 @@ export class CategoryService {
 
   createNewCategory(parentId: string, name: string): Observable<CategoryModel> {
     const newCategory = {name, parentId};
-    console.log(newCategory);
     return this.http.post<CategoryModel>(
       environment.apiUrl + 'category',
       newCategory
     ).pipe(
       catchError(this.handleError.bind(this))
     )
+  }
+
+  searchByNamePhrase(phrase: string): Observable<CategoryModel[]> {
+    return this.http.get<CategoryModel[]>(
+      environment.apiUrl + 'category/search/' + phrase.trim()
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
   }
 
   handleError(error: HttpErrorResponse) {

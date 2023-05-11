@@ -59,6 +59,9 @@ export class AuthService {
   }
 
   get isStaffRole() {
+    if(!this.authenticatedUserSubject.getValue().jwtToken) {
+      return false;
+    }
     const decodedToken = this.jwtService.decodeToken(this.authenticatedUserSubject.getValue().jwtToken);
     if(!decodedToken.roles) {
       return false;

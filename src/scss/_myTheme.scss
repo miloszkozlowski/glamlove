@@ -13,3 +13,11 @@ $form-label-margin-bottom: 0.05rem !default;
 .pointer {
   cursor: pointer;
 }
+.input-search-results {
+  z-index: 1100;
+  position: absolute;
+  width: 95%
+}
+.btn-round {
+  border-radius: 20% !important;
+}

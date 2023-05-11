@@ -1,0 +1,61 @@
+<div class="modal fade" id="productImages" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="productImages" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{editedProduct?.name}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" #closeModal></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger alert-dismissible" role="alert" *ngIf="errorMessage">
+          <div>{{errorMessage}}</div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="alert alert-primary alert-dismissible" role="alert" *ngIf="successMessage">
+          <div>{{successMessage}}</div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div class="text-center p-3" *ngIf="isLoadingForm">
+          <div class="spinner-border text-primary m-5" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div *ngIf="!isLoadingForm && currentMode === 'new'">
+          <p>Zarządzaj zdjęciami produktu. Tutaj należy dodać zdjęcia dla każdej wersji produktu w magazynie.</p>
+          <input type="file" class="d-none" accept="image/*" multiple (change)="onFileSelected($event)" #fileUpload>
+          <div class="d-grid gap-2" *ngIf="previews.length === 0">
+            <button class="btn btn-primary" (click)="fileUpload.click()">
+              <i class="bi bi-upload"></i>
+            </button>
+          </div>
+          <hr *ngIf="previews.length > 0">
+          <form [formGroup]="mainPictureForm" *ngIf="previews.length > 0">
+            <div class="row align-items-end row-cols-1 row-cols-md-2">
+              <div class="col mb-3" formArrayName="main" *ngFor="let preview of previews; index as i">
+                <div class="form-check form-switch box">
+                  <input class="form-check-input" type="checkbox" [formControlName]="i" [id]="i" (change)="handleMarkAsMain(i)">
+                  <label class="form-check-label" [for]="i">główne</label>
+                </div>
+                <img [src]="previews[i]" class="preview img-thumbnail" alt="Preview">
+                <div class="d-grid gap-2">
+                  <button class="btn btn-danger" (click)="removePreview(i)">Usuń <i class="bi bi-trash"></i></button>
+                </div>
+              </div>
+              <div class="col mb-3">
+                <div class="d-flex align-items-center justify-content-center mb-5 mt-5">
+                  <button class="btn btn-round btn-lg btn-outline-primary mb-5" (click)="fileUpload.click()"><i class="bi bi-upload"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="d-grid gap-2 mt-2">
+              <button class="btn btn-primary" (click)="uploadFiles()">
+                Publikuj
+                <i class="bi bi-balloon-heart"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

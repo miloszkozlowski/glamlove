@@ -30,4 +30,11 @@ export class BottomSectionComponent implements OnInit, OnDestroy {
   handleLogout() {
     this.authService.logout();
   }
+
+  get isStaff(): boolean {
+    if(!!this.authService) {
+      return this.authService.isStaffRole && this.isAuth;
+    }
+    return false;
+  }
 }
