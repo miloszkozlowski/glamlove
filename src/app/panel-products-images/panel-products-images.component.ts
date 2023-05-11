@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { Subscription} from "rxjs";
+import {forkJoin, Observable, Subscription} from "rxjs";
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {ProductModel, ProductService} from "../service/product.service";
 import {ErrorHandleService} from "../service/error-handle.service";
@@ -11,16 +11,13 @@ import {ErrorHandleService} from "../service/error-handle.service";
 export class PanelProductsImagesComponent implements OnInit, OnDestroy {
   editedProductSub: Subscription;
   isLoadingForm = false;
-  currentMode = 'new';
+  currentMode = 'edit';
   editedProduct: ProductModel | undefined;
   errorMessage = '';
   successMessage = '';
   selectedFiles?: FileList;
-  progressInfos: any[] = [];
-  message: string[] = [];
   previews: string[] = [];
   mainPictureForm: FormGroup
-  mainChangeSub: Subscription | any;
   errorMessageSub: Subscription;
 
   constructor(private productService: ProductService, private errorService: ErrorHandleService) {
@@ -47,9 +44,10 @@ export class PanelProductsImagesComponent implements OnInit, OnDestroy {
 
   onFileSelected(event: any) {
     try {
+      this.currentMode = 'new';
+      this.successMessage = '';
       this.errorMessage = '';
-      this.message = [];
-      this.progressInfos = [];
+      this.errorMessage = '';
       this.selectedFiles = event.target.files;
       if (this.selectedFiles && this.selectedFiles[0]) {
         const numberOfFiles = this.selectedFiles.length;
@@ -79,24 +77,37 @@ export class PanelProductsImagesComponent implements OnInit, OnDestroy {
   }
 
   uploadFiles(): void {
+    this.isLoadingForm = true;
     this.errorMessage = '';
     this.successMessage = '';
+    const uploads: Observable<any>[] = []
     if (this.selectedFiles) {
       for (let i = 0; i < this.selectedFiles.length; i++) {
-        this.upload(i, this.selectedFiles[i]);
+        uploads.push(this.upload(i, this.selectedFiles[i]));
       }
     }
+    forkJoin(uploads).subscribe(res => {
+      this.isLoadingForm = false;
+      res.forEach(r => {
+        if(r.type === 0) {
+          return;
+        }
+        if(this.editedProduct?.allPictures) {
+          this.editedProduct?.allPictures?.push(r);
+        } else {
+          this.editedProduct!.allPictures = [r];
+        }
+        this.currentMode = 'edit';
+        this.successMessage = 'Zdjęcia dodano';
+        this.previews = [];
+        delete this.selectedFiles;
+      });
+    });
   }
 
-  upload(idx: number, file: File): void {
-    this.productService.pictureUpload(file, this.isFileMain(idx), this.editedProduct!.id)
-      .subscribe(res => {
-        if(this.editedProduct?.allPictures) {
-          this.editedProduct?.allPictures?.push(res);
-        } else {
-          this.editedProduct!.allPictures = [res];
-        }
-      });
+  upload(idx: number, file: File): Observable<any> {
+    return this.productService.pictureUpload(file, this.isFileMain(idx), this.editedProduct!.id);
+
   }
 
   removePreview(ind: number) {

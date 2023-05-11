@@ -57,6 +57,5 @@ export class PanelProductsComponent implements AfterContentInit {
     event.stopPropagation();
     this.editedImagesFor = this.productsLoaded.find(p => p.id === id);
     this.productService.editedProductSubject.next(this.editedImagesFor);
-
   }
 }

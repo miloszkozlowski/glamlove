@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {PictureMetadata, PictureService} from "../service/picture-service";
+import {PictureMetadata} from "../service/picture-service";
 import {environment} from "../../environments/environment";
 
 @Component({
@@ -21,5 +21,9 @@ export class GlamImageComponent {
     } else {
       return null;
     }
+  }
+
+  get isPlaceHolder(): boolean {
+    return !this.picture || this.isLoaded;
   }
 }
