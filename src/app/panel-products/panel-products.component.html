@@ -15,7 +15,9 @@
     <div class="row">
       <div class="col-12 col-sm-6 col-lg-4 mt-1 mb-1" *ngFor="let prod of productsLoaded">
         <div class="card pointer" (click)="handleEditProduct(prod.id)" data-bs-toggle="modal" data-bs-target="#productEdit">
-          <app-glam-image [thumbnail]="true" [picture]="prod.mainPicture!" class="card-img-top"></app-glam-image>
+          <div (click)="handleImages(prod.id, $event)" data-bs-toggle="modal" data-bs-target="#productImages">
+            <app-glam-image [thumbnail]="true" [card-image]="true" [picture]="prod.mainPicture!" class="card-img-top" (click)="handleImages(prod.id, $event)"></app-glam-image>
+          </div>
           <div class="card-body">
             <h5 class="card-title">{{prod.name}} <span class="badge" [ngClass]="{'bg-success' : prod.isPublished, 'bg-danger' : !prod.isPublished}">{{prod.isPublished ? 'Opublikowane' : 'Nieopublikowane'}}</span></h5>
             <p class="text-help">{{prod.category.name}}</p>
@@ -26,7 +28,7 @@
               Zdjęcia
               <span class="badge bg-primary rounded-pill">{{prod.allPictures ? prod.allPictures.length : 0}}</span>
             </li>
-            <li class="list-group-item list-group-item-action" (click)="handleImages(prod.id, $event)" data-bs-toggle="modal" data-bs-target="#productImages">
+            <li class="list-group-item">
               <div class="container pe-0 ps-0">
                 <button
                   type="button"

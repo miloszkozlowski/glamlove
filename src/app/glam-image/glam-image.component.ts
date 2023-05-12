@@ -11,6 +11,7 @@ export class GlamImageComponent {
   isLoaded: boolean = false;
   @Input('picture') picture: PictureMetadata;
   @Input('thumbnail') thumbnail: boolean = false;
+  @Input('card-image') cardImage: boolean = false;
 
   constructor() {
   }

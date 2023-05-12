@@ -38,6 +38,7 @@ export class PanelProductEditComponent implements OnInit, OnDestroy {
     });
     this.searchSub = this.productForm.controls['productCategory'].valueChanges
       .subscribe(val => this.handleSearch(val));
+    this.productForm.reset({});
     this.editedProductSub = this.productService.editedProductSubject.subscribe(edited => {
       this.editedProduct = edited;
       this.selectedCategory = edited?.category;

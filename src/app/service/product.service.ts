@@ -69,4 +69,30 @@ export class ProductService {
       catchError(this.handleError.bind(this))
     );
   }
+
+  pictureMarkAsMain(picId: string): Observable<any> {
+    return this.http.patch(
+      environment.apiUrl + 'img/' + picId + '/main',
+      {}
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  pictureRemoval(picId: string): Observable<any> {
+    return this.http.delete(
+      environment.apiUrl + "img/" + picId
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  pictureRotation(picId: string): Observable<PictureMetadata> {
+    return this.http.patch<PictureMetadata>(
+      environment.apiUrl + 'img/' + picId + '/rotate',
+      {}
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
 }

@@ -1,2 +1,9 @@
-<img src="assets/images/thumb_placeholder.png" *ngIf="!isLoaded || !picture" alt="Pobieram..." class="card-img-top" [ngClass]="{'placeholder': isPlaceHolder}">
-<img [src]="imgUrl" (load)="isLoaded = true" [alt]="picture.id" [id]="picture.id" class="card-img-top" [hidden]="!isLoaded || !picture" *ngIf="!!picture">
+<img src="assets/images/thumb_placeholder.png" *ngIf="!isLoaded || !picture" alt="Pobieram..." class="card-img-top" [ngClass]="{
+'placeholder': isPlaceHolder,
+'card-img-top': cardImage,
+'img-thumbnail': !cardImage && thumbnail
+}">
+<img [src]="imgUrl" (load)="isLoaded = true" [alt]="picture.id" [id]="picture.id"  [ngClass]="{
+'card-img-top': cardImage,
+'img-thumbnail': !cardImage && thumbnail
+}" [hidden]="!isLoaded || !picture" *ngIf="!!picture">

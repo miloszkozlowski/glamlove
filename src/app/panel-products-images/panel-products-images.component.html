@@ -28,6 +28,16 @@
               <i class="bi bi-upload"></i>
             </button>
           </div>
+          <div class="row align-items-end row-cols-1 row-cols-md-2 mt-3" *ngIf="allPictures.length > 0">
+            <div class="col mb-3" *ngFor="let pic of allPictures!; index as i">
+              <app-glam-image [picture]="pic" [thumbnail]="true"></app-glam-image>
+              <div class="ps-1 pe-1 mt-1">
+                <button class="btn btn-sm" [ngClass]="isMainPicture(pic) ? 'btn-primary' : 'btn-outline-primary'" (click)="markAsMain(pic)">Główne <i class="bi bi-check"></i></button>
+                <button class="btn btn-sm ms-1 btn-outline-danger" (click)="handleRotate(pic)"><i class="bi bi-arrow-clockwise"></i></button>
+                <button class="btn btn-sm ms-1 btn-outline-danger" (click)="handleRemove(pic)"><i class="bi bi-trash-fill"></i></button>
+              </div>
+            </div>
+          </div>
         </div>
         <div *ngIf="!isLoadingForm && currentMode === 'new'">
           <form [formGroup]="mainPictureForm" *ngIf="previews.length > 0">
@@ -51,7 +61,7 @@
               </div>
             </div>
             <div class="d-grid gap-2 mt-2">
-              <button class="btn btn-primary" (click)="uploadFiles()">
+              <button class="btn btn-primary" (click)="uploadFiles()" type="button">
                 Zamieść zdjęcia
                 <i class="bi bi-balloon-heart"></i>
               </button>
