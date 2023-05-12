@@ -9,6 +9,7 @@ export class AuthService {
   authenticatedUserSubject: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(UserModel.getGuest());
   private _isAuthenticated: boolean;
   private jwtService: JwtHelperService;
+  private logoutTimer: any;
   constructor() {
     this.jwtService = new JwtHelperService(this.authenticatedUserSubject.getValue().jwtToken);
   }
@@ -16,6 +17,12 @@ export class AuthService {
   storeUserData(user: UserModel) {
     this.authenticatedUserSubject.next(user);
     this._isAuthenticated = true;
+    if(this.logoutTimer) {
+      clearTimeout(this.logoutTimer);
+    }
+    this.logoutTimer = setTimeout(() => {
+      this.logout();
+    }, user.msLeftBeforeExpiration);
   }
 
   logout() {

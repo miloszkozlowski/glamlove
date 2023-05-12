@@ -44,4 +44,8 @@ export class UserModel {
   get isGuest() {
     return this.email === GUEST_EMAIL;
   }
+
+  get msLeftBeforeExpiration(): number {
+    return (this.expirationOn.getTime() - Date.now());
+  }
 }
