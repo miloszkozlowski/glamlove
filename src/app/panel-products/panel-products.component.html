@@ -14,11 +14,11 @@
   <div class="container mt-3">
     <div class="row">
       <div class="col-12 col-sm-6 col-lg-4 mt-1 mb-1" *ngFor="let prod of productsLoaded">
-        <div class="card pointer" (click)="handleEditProduct(prod.id)" data-bs-toggle="modal" data-bs-target="#productEdit">
+        <div class="card pointer">
           <div (click)="handleImages(prod.id, $event)" data-bs-toggle="modal" data-bs-target="#productImages">
             <app-glam-image [thumbnail]="true" [card-image]="true" [picture]="prod.mainPicture!" class="card-img-top" (click)="handleImages(prod.id, $event)"></app-glam-image>
           </div>
-          <div class="card-body">
+          <div class="card-body" (click)="handleEditProduct(prod.id)" data-bs-toggle="modal" data-bs-target="#productEdit">
             <h5 class="card-title">{{prod.name}} <span class="badge" [ngClass]="{'bg-success' : prod.isPublished, 'bg-danger' : !prod.isPublished}">{{prod.isPublished ? 'Opublikowane' : 'Nieopublikowane'}}</span></h5>
             <p class="text-help">{{prod.category.name}}</p>
             <p class="card-text">{{prod.description | truncate:[100]}}</p>
@@ -35,12 +35,14 @@
                   class="btn btn-outline-primary me-2"
                   *ngIf="!prod.isPublished"
                   value="Opublikuj"
+                  (click)="setPublished(true, prod, $event)"
                 ><i class="bi bi-megaphone-fill"></i></button>
                 <button
                   type="button"
                   class="btn btn-outline-primary me-2"
                   *ngIf="prod.isPublished"
                   value="Wycofaj"
+                  (click)="setPublished(false, prod, $event)"
                 ><i class="bu bi-backspace-fill"></i></button>
                 <button
                   type="button"

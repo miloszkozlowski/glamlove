@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpErrorResponse, HttpRequest} from "@angular/common/http";
-import {catchError, Observable, Subject, tap, throwError} from "rxjs";
+import {catchError, Observable, Subject, throwError} from "rxjs";
 import {ErrorHandleService} from "./error-handle.service";
 import {environment} from "../../environments/environment";
 import {GenericPageModel} from "../model/generic-page.model";

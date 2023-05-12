@@ -23,10 +23,6 @@ export class PanelProductsComponent implements AfterContentInit {
     });
   }
 
-  handleAddItems(id: string, event: Event) {
-
-  }
-
   handleEditProduct(id: string) {
     this.editedProduct = this.productsLoaded.find(p => p.id === id);
     this.productService.editedProductSubject.next(this.editedProduct);
@@ -51,11 +47,21 @@ export class PanelProductsComponent implements AfterContentInit {
     editedProduct.name = product.name;
     editedProduct.description = product.description;
     editedProduct.category = product.category;
+    editedProduct.isPublished = product.isPublished;
   }
 
   handleImages(id: string, event: Event) {
     event.stopPropagation();
     this.editedImagesFor = this.productsLoaded.find(p => p.id === id);
     this.productService.editedProductSubject.next(this.editedImagesFor);
+  }
+
+  setPublished(published: boolean, prod: ProductModel, event: Event) {
+    this.productService.updateProduct(
+      prod.id,
+      {isPublished: published, name: prod.name, description: prod.description, categoryId: prod.category.id}
+    ).subscribe((modified) => {
+      this.updateEditedProduct(modified);
+    });
   }
 }

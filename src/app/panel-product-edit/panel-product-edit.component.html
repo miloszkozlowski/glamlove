@@ -2,7 +2,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Nowy produkt w sklepie</h1>
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ !editedProduct ? 'Nowy produkt w sklepie' : 'Edycja produktu' }}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="handleClearAll()" #closeModal></button>
       </div>
       <div class="modal-body">
@@ -16,6 +16,7 @@
         <div *ngIf="!isLoadingForm && currentMode === 'new'">
           <p>Tutaj dodasz produkt (nazwa, opis etc.). Żeby produkt był widoczny w sklepie należy dodać sztuki w magazynie.</p>
           <form [formGroup]="productForm">
+            <p>Obecny status: <span class="badge bg-secondary" *ngIf="!!editedProduct">{{editedProduct.status}}</span></p>
             <div class="mb-2">
               <label for="productName" class="form-label">Nazwa główna produktu</label>
               <input
