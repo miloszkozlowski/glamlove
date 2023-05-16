@@ -3,6 +3,7 @@ import {JwtHelperService} from "@auth0/angular-jwt";
 import {UserAuthDataModel} from "../model/user-auth-data.model";
 import {UserModel} from "../model/user.model";
 import {BehaviorSubject} from "rxjs";
+import {Router} from "@angular/router";
 
 @Injectable({providedIn: "root"})
 export class AuthService {
@@ -10,8 +11,8 @@ export class AuthService {
   private _isAuthenticated: boolean;
   private jwtService: JwtHelperService;
   private logoutTimer: any;
-  constructor() {
-    this.jwtService = new JwtHelperService(this.authenticatedUserSubject.getValue().jwtToken);
+  constructor(private router: Router) {
+    this.jwtService = new JwtHelperService(this.authenticatedUserSubject.getValue().jwtToken)
   }
 
   storeUserData(user: UserModel) {
@@ -29,7 +30,7 @@ export class AuthService {
     localStorage.removeItem('userData');
     this._isAuthenticated = false;
     this.authenticatedUserSubject.next(UserModel.getGuest());
-    console.warn('Logged out');
+    this.router.navigate(['/login']).then(() => console.warn('Logged out'));
   }
 
   autologin() {

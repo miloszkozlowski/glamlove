@@ -1,31 +1,102 @@
-import {AfterContentInit, Component} from '@angular/core';
+import {AfterContentInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {ProductModel, ProductService} from "../service/product.service";
+import {CategoryModel, CategoryService} from "../service/category.service";
+import {forkJoin, Subscription} from "rxjs";
+import {GenericPageModel} from "../model/generic-page.model";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-panel-products',
   templateUrl: './panel-products.component.html'
 })
-export class PanelProductsComponent implements AfterContentInit {
+export class PanelProductsComponent implements AfterContentInit, OnInit, OnDestroy {
   isLoading = true;
   currentPage: number = 0;
   canLoadMore: boolean = false;
   productsLoaded: ProductModel[] = [];
   editedProduct: ProductModel | undefined;
   editedImagesFor: ProductModel | undefined;
-  constructor(private productService: ProductService) {
+  categories: CategoryModel[] | undefined;
+  searchPhrase = '';
+  filterForm: FormGroup;
+  categoryFilterSub: Subscription | any;
+  selectedCategory: string | undefined;
+  constructor(private productService: ProductService, private categoryService: CategoryService) {
+  }
+
+  ngOnInit() {
+    this.filterForm = new FormGroup({
+      'category': new FormControl('Wszystkie')
+    });
+    this.categoryFilterSub = this.filterForm.controls['category'].valueChanges
+      .subscribe(selected => this.handleCategoryFilter(selected));
+  }
+
+  ngOnDestroy() {
+    this.categoryFilterSub.unsubscribe();
   }
 
   ngAfterContentInit() {
+    forkJoin([
+        this.productService.getProductPage(0),
+        this.categoryService.fetchAll()
+      ])
+      .subscribe(results => {
+      results.forEach((r, i) => {
+        if(i === 0) {
+          this.productsLoaded = (r as GenericPageModel<ProductModel>).content
+          this.canLoadMore = (r as GenericPageModel<ProductModel>).last;
+        } else if(i === 1) {
+          this.categories = Object.keys(r).flatMap(id => r[id]).sort(function (a, b) {
+            if (a.name < b.name) {
+              return -1;
+            }
+            if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
+          });
+        }
+        this.isLoading = false;
+      })
+    });
     this.productService.getProductPage(0).subscribe(page => {
       this.productsLoaded = page.content;
-      this.isLoading = false;
       this.canLoadMore = !page.last;
+    });
+    this.categoryService.fetchAll().subscribe(cats => {
+
     });
   }
 
   handleEditProduct(id: string) {
     this.editedProduct = this.productsLoaded.find(p => p.id === id);
     this.productService.editedProductSubject.next(this.editedProduct);
+  }
+
+  performSearch() {
+    this.isLoading = true;
+    if(!this.searchPhrase) {
+      this.productService.getProductPage(0).subscribe(page => {
+        this.productsLoaded = page.content
+        this.canLoadMore = page.last;
+      });
+    } else {
+      this.productService.getProductSearchResults(0, this.searchPhrase).subscribe(page => {
+        this.productsLoaded = page.content;
+        this.canLoadMore = false;
+        this.isLoading = false;
+      });
+    }
+  }
+
+  handleCategoryFilter(categoryId: string) {
+    this.isLoading = true;
+    this.selectedCategory = categoryId;
+    this.productService.getProductsByCategory(0, categoryId).subscribe(page => {
+      this.productsLoaded = page.content
+      this.canLoadMore = page.last;
+    });
   }
 
   loadMoreProducts() {
@@ -41,13 +112,10 @@ export class PanelProductsComponent implements AfterContentInit {
 
   updateEditedProduct(product: ProductModel) {
     const editedProduct = this.productsLoaded.find(p => p.id === product.id);
-    if(!editedProduct) {
-      return;
-    }
-    editedProduct.name = product.name;
-    editedProduct.description = product.description;
-    editedProduct.category = product.category;
-    editedProduct.isPublished = product.isPublished;
+    editedProduct!.name = product.name;
+    editedProduct!.description = product.description;
+    editedProduct!.category = product.category;
+    editedProduct!.isPublished = product.isPublished;
   }
 
   handleImages(id: string, event: Event) {

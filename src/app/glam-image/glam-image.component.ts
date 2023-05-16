@@ -25,6 +25,6 @@ export class GlamImageComponent {
   }
 
   get isPlaceHolder(): boolean {
-    return !this.picture || this.isLoaded;
+    return this.picture && !this.isLoaded;
   }
 }

@@ -23,6 +23,14 @@ export class CategoryService {
     )
   }
 
+  fetchAll(): Observable<any> {
+    return this.http.get<Map<string, CategoryModel[]>>(
+      environment.apiUrl + 'category/all'
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    )
+  }
+
   fetchById(id: string): Observable<CategoryModel> {
     return this.http.get<CategoryModel>(
       environment.apiUrl + 'category/' + id

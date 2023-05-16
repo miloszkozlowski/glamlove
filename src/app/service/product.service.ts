@@ -43,8 +43,26 @@ export class ProductService {
     );
   }
 
-  getProductPage(pageNo: number, searchPhrase?: string): Observable<GenericPageModel<ProductModel>> {
-    const urlParams = 'product/page/all/' + pageNo + (searchPhrase ? ('/' + searchPhrase) : '');
+  getProductPage(pageNo: number): Observable<GenericPageModel<ProductModel>> {
+    const urlParams = 'product/page/all/' + pageNo;
+      return this.http.get<GenericPageModel<ProductModel>>(
+        environment.apiUrl + urlParams
+      ).pipe(
+        catchError(this.handleError.bind(this))
+      );
+  }
+
+  getProductsByCategory(pageNo: number, categoryId: string): Observable<GenericPageModel<ProductModel>> {
+    const urlParams = 'product/page/category/' + categoryId + '/' + pageNo;
+      return this.http.get<GenericPageModel<ProductModel>>(
+        environment.apiUrl + urlParams
+      ).pipe(
+        catchError(this.handleError.bind(this))
+      );
+  }
+
+  getProductSearchResults(pageNo: number, searchPhrase: string): Observable<GenericPageModel<ProductModel>> {
+    const urlParams = 'product/page/all/' + pageNo + '/' + searchPhrase;
       return this.http.get<GenericPageModel<ProductModel>>(
         environment.apiUrl + urlParams
       ).pipe(
