@@ -1,7 +1,7 @@
 import {AfterContentInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {ProductModel, ProductService} from "../service/product.service";
 import {CategoryModel, CategoryService} from "../service/category.service";
-import {forkJoin, Subscription} from "rxjs";
+import {forkJoin, Observable, Subscription} from "rxjs";
 import {GenericPageModel} from "../model/generic-page.model";
 import {FormControl, FormGroup} from "@angular/forms";
 
@@ -29,7 +29,15 @@ export class PanelProductsComponent implements AfterContentInit, OnInit, OnDestr
       'category': new FormControl('Wszystkie')
     });
     this.categoryFilterSub = this.filterForm.controls['category'].valueChanges
-      .subscribe(selected => this.handleCategoryFilter(selected));
+      .subscribe(selected => {
+        if(selected === 'Wszystkie') {
+          this.selectedCategory = undefined;
+          this.currentPage = -1;
+          this.loadMoreProducts();
+        } else {
+          this.handleCategoryFilter(selected)
+        }
+      });
   }
 
   ngOnDestroy() {
@@ -96,6 +104,7 @@ export class PanelProductsComponent implements AfterContentInit, OnInit, OnDestr
     this.productService.getProductsByCategory(0, categoryId).subscribe(page => {
       this.productsLoaded = page.content
       this.canLoadMore = page.last;
+      this.isLoading = false;
     });
   }
 
@@ -104,7 +113,13 @@ export class PanelProductsComponent implements AfterContentInit, OnInit, OnDestr
       return;
     }
     this.isLoading = true;
-    this.productService.getProductPage(++this.currentPage).subscribe(page => {
+    let obs: Observable<GenericPageModel<ProductModel>>;
+    if(!!this.selectedCategory) {
+      obs = this.productService.getProductsByCategory(++this.currentPage, this.selectedCategory);
+    } else {
+      obs = this.productService.getProductPage(++this.currentPage);
+    }
+    obs.subscribe(page => {
       this.productsLoaded = [...this.productsLoaded, ...page.content];
       this.isLoading = false;
     });
