@@ -35,7 +35,7 @@ export class PanelProductsComponent implements AfterContentInit, OnInit, OnDestr
           this.currentPage = -1;
           this.loadMoreProducts();
         } else {
-          this.handleCategoryFilter(selected)
+          this.handleCategoryFilter(selected);
         }
       });
   }
@@ -137,6 +137,12 @@ export class PanelProductsComponent implements AfterContentInit, OnInit, OnDestr
     event.stopPropagation();
     this.editedImagesFor = this.productsLoaded.find(p => p.id === id);
     this.productService.editedProductSubject.next(this.editedImagesFor);
+  }
+
+  handleShowWhs(id: string, event: Event) {
+    event.stopPropagation();
+    const productWhs = this.productsLoaded.find(p => p.id === id);
+    this.productService.editedProductSubject.next(productWhs);
   }
 
   setPublished(published: boolean, prod: ProductModel, event: Event) {

@@ -1,0 +1,128 @@
+<div class="modal fade" id="productWhs" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="productWhs" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">{{ editedProduct?.name }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" #closeModal></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger alert-dismissible" role="alert" *ngIf="errorMessage">   <div>{{errorMessage}}</div>   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+        <div class="alert alert-primary alert-dismissible" role="alert" *ngIf="successMessage">   <div>{{successMessage}}</div>   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+        <div class="text-center p-3" *ngIf="isLoadingForm">
+          <div class="spinner-border text-primary m-5" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div *ngIf="!isLoadingForm && currentMode === 'summary'">
+          <p class="lead">Stan magazynu</p>
+          <button class="btn btn-primary btn-sm" (click)="currentMode = 'new'">Nowe SKU <i class="bi bi-plus"></i></button>
+        </div>
+        <div *ngIf="!isLoadingForm && currentMode === 'new'">
+          <p class="lead">Nowe SKU</p>
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <form [formGroup]="newSkuForm">
+                  <div class="row">
+                    <label for="inputSku" class="col-form-label-sm ps-0">Numer SKU (kod kreskowy)</label>
+                    <input
+                      formControlName="sku"
+                      type="text"
+                      maxlength="13"
+                      pattern="[0-9]*"
+                      class="form-control form-control-sm"
+                      id="inputSku"
+                    >
+                    <label for="inputColor" class="col-form-label-sm ps-0 mt-1">Kolor</label>
+                    <div class="row align-items-center pe-0">
+                      <div class="col ps-0">
+                        <input
+                          type="search"
+                          formControlName="color"
+                          placeholder="Wyszukaj istniejący..."
+                          class="form-control form-control-sm"
+                          id="inputColor"
+                          autocomplete="do-not-autofill"
+                          spellcheck="false"
+                          autocapitalize="off"
+                        >
+                        <div class="col list-group input-search-results" *ngIf="foundColors.length > 0">
+                          <a href="#" class="list-group-item list-group-item-action" *ngFor="let color of foundColors" [id]="color.id" (click)="handleColorChoice(color, $event)">{{color.colorName}}</a>
+                        </div>
+                      </div>
+                      <div class="col-1 justify-content-end me-0">
+                        <button class="btn btn-outline-primary btn-sm" type="button" (click)="handleChooseColor()" [disabled]="currentNewFormMode !== ''"><i class="bi bi-plus-circle-dotted"></i></button>
+                      </div>
+                    </div>
+                    <label for="inputSize" class="col-form-label-sm ps-0 mt-1">Rozmiar</label>
+                    <div class="row align-items-center pe-0">
+                      <div class="col ps-0">
+                        <input
+                          type="search"
+                          formControlName="size"
+                          placeholder="Wyszukaj istniejący..."
+                          class="form-control form-control-sm"
+                          id="inputSize"
+                        >
+                        <div class="col list-group input-search-results" *ngIf="foundSizes.length > 0">
+                          <a href="#" class="list-group-item list-group-item-action" *ngFor="let size of foundSizes" [id]="size.id" (click)="handleSizeChoice(size, $event)">{{size.sizeValue}}</a>
+                        </div>
+                      </div>
+                      <div class="col-1 justify-content-end me-0">
+                        <button class="btn btn-outline-primary btn-sm" type="button" (click)="handleChooseSize()" [disabled]="currentNewFormMode !== ''"><i class="bi bi-plus-circle-dotted"></i></button>
+                      </div>
+                    </div>
+                    <label for="inputQty" class="col-form-label-sm ps-0 mt-1">Ilość w magazynie</label>
+                    <input formControlName="qty" type="number" min="0" step="1" pattern="[0-9]*" placeholder="szt." class="form-control form-control-sm" id="inputQty">
+                    <label for="inputPrice" class="col-form-label-sm ps-0 mt-1">Cena bazowa brutto</label>
+                    <input formControlName="price" type="number" min="0" placeholder="PLN" step="0.01" class="form-control form-control-sm" id="inputPrice">
+                    <label for="inputDiscount" class="col-form-label-sm ps-0 mt-1">Rabat</label>
+                    <input formControlName="discount" type="number" min="0" placeholder="%" step="1" class="form-control form-control-sm" id="inputDiscount">
+                    <div class="form-check form-switch mt-3">
+                      <input formControlName="promoted" class="form-check-input" type="checkbox" role="switch" id="inputPromo">
+                      <label class="form-check-label" for="inputPromo">Produkt promowany</label>
+                    </div>
+                  </div>
+                </form>
+                <mat-divider class="d-block d-md-none mt-4 mb-3"></mat-divider>
+              </div>
+              <div class="col-1 d-none d-md-block">
+                <mat-divider [vertical]="true" style="height: 400px"></mat-divider>
+              </div>
+              <div class="col-12 col-md ms-2 mt-0" *ngIf="currentNewFormMode === 'size'">
+                <form [formGroup]="newSizeForm" (ngSubmit)="handleNewSizeSelected()">
+                  <label for="inputSizeName" class="form-label">Nazwij nowy rozmiar (np. XS, 32 etc.)</label>
+                  <input formControlName="name" type="text" class="form-control mb-2" id="inputSizeName" title="Wybierz kolor">
+                  <div class="d-flex justify-content-end align-items-end mt-3">
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="returnToProductSummary()"><i class="bi bi-x-circle-fill"></i></button>
+                    <button type="submit" class="btn btn-sm btn-outline-primary ms-1" [disabled]="!newSizeForm.valid">Wybierz <i class="bi bi-palette"></i></button>
+                  </div>
+                </form>
+              </div>
+              <div class="col-12 col-md ms-2 mt-0" *ngIf="currentNewFormMode === 'color'">
+                <form [formGroup]="newColorForm" (ngSubmit)="handleNewColorSelected()">
+                  <label for="inputColorValue" class="form-label">Wybierz kolor </label>
+                  <input
+                    formControlName="value" type="color" class="form-control form-control-color mb-2" id="inputColorValue" title="Wybierz kolor">
+                  <label for="inputColorName" class="form-label">Nadaj nazwę </label>
+                  <input formControlName="name" class="form-control form-control-sm" id="inputColorName"/>
+                  <div class="d-flex justify-content-end align-items-end mt-3">
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="returnToProductSummary()"><i class="bi bi-x-circle-fill"></i></button>
+                    <button type="submit" class="btn btn-sm btn-outline-primary ms-1" [disabled]="!newColorForm.valid">Wybierz <i class="bi bi-palette"></i></button>
+                  </div>
+                </form>
+              </div>
+              <div class="col-12 col-md ms-2" *ngIf="currentNewFormMode === ''">
+                <app-glam-image class="img-fluid" [picture]="editedProduct!.mainPicture!" *ngIf="editedProduct?.mainPicture"></app-glam-image>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" *ngIf="currentMode === 'new'">
+        <button type="button" class="btn btn-secondary" [disabled]="isLoadingForm" (click)="currentMode = 'summary'">Anuluj</button>
+        <button type="button" class="btn btn-primary" (click)="handleSaveNewSku()" [disabled]="!newSkuForm.valid || isLoadingForm">Zapisz <i class="bi bi-check"></i></button>
+      </div>
+    </div>
+  </div>
+</div>

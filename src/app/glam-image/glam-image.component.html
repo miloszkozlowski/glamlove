@@ -5,5 +5,6 @@
 }">
 <img [src]="imgUrl" (load)="isLoaded = true" [alt]="picture.id" [id]="picture.id"  [ngClass]="{
 'card-img-top': cardImage,
-'img-thumbnail': !cardImage && thumbnail
+'img-thumbnail': !cardImage && thumbnail,
+'img-fluid': !cardImage && !thumbnail
 }" [hidden]="!isLoaded || !picture" *ngIf="!!picture">

@@ -29,6 +29,10 @@ import { PanelProductEditComponent } from './panel-product-edit/panel-product-ed
 import {TextTruncatePipe} from "./service/text-truncate.pipe";
 import { PanelProductsImagesComponent } from './panel-products-images/panel-products-images.component';
 import { GlamImageComponent } from './glam-image/glam-image.component';
+import { PanelProductWhsComponent } from './panel-product-whs/panel-product-whs.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatDividerModule} from "@angular/material/divider";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
   declarations: [
@@ -53,7 +57,8 @@ import { GlamImageComponent } from './glam-image/glam-image.component';
     PanelProductEditComponent,
     TextTruncatePipe,
     PanelProductsImagesComponent,
-    GlamImageComponent
+    GlamImageComponent,
+    PanelProductWhsComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +67,10 @@ import { GlamImageComponent } from './glam-image/glam-image.component';
     ReactiveFormsModule,
     HttpClientModule,
     InfiniteScrollModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatDividerModule,
+    MatSlideToggleModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TokenInterceptor}
