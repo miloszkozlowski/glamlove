@@ -1,6 +1,6 @@
 <h4 class="mt-4">Produkty</h4>
 <div class="mt-2">
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productEdit"
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productEdit" (click)="editedProduct = undefined"
           [disabled]="isLoading">
     Dodaj nowy produkt <i class="bi bi-database-add"></i>
   </button>

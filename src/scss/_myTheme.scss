@@ -21,8 +21,14 @@ $my-danger: #c26e6e;
 .input-search-results {
   z-index: 1100;
   position: absolute;
-  width: 95%
+  width: 37%
 }
 .btn-round {
   border-radius: 20% !important;
+}
+.color-presentation-box {
+  width: 1.5rem;
+  height: 0.7rem;
+  display: inline-block;
+  margin-right: 10px;
 }

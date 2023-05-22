@@ -21,18 +21,25 @@
           <p class="lead">Nowe SKU</p>
           <div class="container">
             <div class="row">
-              <div class="col">
+              <div class="col col-12 col-lg-7">
                 <form [formGroup]="newSkuForm">
-                  <div class="row">
+                  <div class="row mb-3">
                     <label for="inputSku" class="col-form-label-sm ps-0">Numer SKU (kod kreskowy)</label>
-                    <input
-                      formControlName="sku"
-                      type="text"
-                      maxlength="13"
-                      pattern="[0-9]*"
-                      class="form-control form-control-sm"
-                      id="inputSku"
-                    >
+                    <div class="row align-items-center pe-0">
+                      <div class="col-6 col-sm-7 col-lg-8 ps-0 d-flex">
+                        <input
+                          formControlName="sku"
+                          type="text"
+                          maxlength="13"
+                          pattern="[0-9]*"
+                          class="form-control form-control-sm"
+                          id="inputSku"
+                        >
+                      </div>
+                      <div class="col-6 col-sm-5 col-lg-4 justify-content-end me-0 d-flex">
+                        <button class="btn btn-sm btn-link me-0 ms-0" type="button" (click)="handleGenerateEan13()">Generuj nowy</button>
+                      </div>
+                    </div>
                     <label for="inputColor" class="col-form-label-sm ps-0 mt-1">Kolor</label>
                     <div class="row align-items-center pe-0">
                       <div class="col ps-0">
@@ -47,7 +54,9 @@
                           autocapitalize="off"
                         >
                         <div class="col list-group input-search-results" *ngIf="foundColors.length > 0">
-                          <a href="#" class="list-group-item list-group-item-action" *ngFor="let color of foundColors" [id]="color.id" (click)="handleColorChoice(color, $event)">{{color.colorName}}</a>
+                          <div *ngFor="let color of foundColors" class="list-group-item list-group-item-action" [id]="color.id" (click)="handleColorChoice(color, $event)">
+                            <div class="color-presentation-box" [ngStyle]="{'background-color': color.colorValue}"></div>{{color.colorName}}
+                          </div>
                         </div>
                       </div>
                       <div class="col-1 justify-content-end me-0">
@@ -63,6 +72,9 @@
                           placeholder="Wyszukaj istniejący..."
                           class="form-control form-control-sm"
                           id="inputSize"
+                          autocomplete="do-not-autofill"
+                          spellcheck="false"
+                          autocapitalize="off"
                         >
                         <div class="col list-group input-search-results" *ngIf="foundSizes.length > 0">
                           <a href="#" class="list-group-item list-group-item-action" *ngFor="let size of foundSizes" [id]="size.id" (click)="handleSizeChoice(size, $event)">{{size.sizeValue}}</a>
@@ -75,24 +87,24 @@
                     <label for="inputQty" class="col-form-label-sm ps-0 mt-1">Ilość w magazynie</label>
                     <input formControlName="qty" type="number" min="0" step="1" pattern="[0-9]*" placeholder="szt." class="form-control form-control-sm" id="inputQty">
                     <label for="inputPrice" class="col-form-label-sm ps-0 mt-1">Cena bazowa brutto</label>
-                    <input formControlName="price" type="number" min="0" placeholder="PLN" step="0.01" class="form-control form-control-sm" id="inputPrice">
+                    <input formControlName="price" type="number" min="0" placeholder="PLN" step="0.01" pattern="[0-9]*" inputmode="decimal" class="form-control form-control-sm" id="inputPrice">
                     <label for="inputDiscount" class="col-form-label-sm ps-0 mt-1">Rabat</label>
-                    <input formControlName="discount" type="number" min="0" placeholder="%" step="1" class="form-control form-control-sm" id="inputDiscount">
+                    <input formControlName="discount" type="number" min="0" placeholder="%" step="1" pattern="[0-9]*" class="form-control form-control-sm" id="inputDiscount">
                     <div class="form-check form-switch mt-3">
                       <input formControlName="promoted" class="form-check-input" type="checkbox" role="switch" id="inputPromo">
                       <label class="form-check-label" for="inputPromo">Produkt promowany</label>
                     </div>
                   </div>
                 </form>
-                <mat-divider class="d-block d-md-none mt-4 mb-3"></mat-divider>
+                <mat-divider class="d-block d-lg-none mt-4 mb-3"></mat-divider>
               </div>
-              <div class="col-1 d-none d-md-block">
-                <mat-divider [vertical]="true" style="height: 400px"></mat-divider>
+              <div class="col-1 d-none d-lg-block">
+                <mat-divider [vertical]="true" style="height: 470px"></mat-divider>
               </div>
               <div class="col-12 col-md ms-2 mt-0" *ngIf="currentNewFormMode === 'size'">
                 <form [formGroup]="newSizeForm" (ngSubmit)="handleNewSizeSelected()">
                   <label for="inputSizeName" class="form-label">Nazwij nowy rozmiar (np. XS, 32 etc.)</label>
-                  <input formControlName="name" type="text" class="form-control mb-2" id="inputSizeName" title="Wybierz kolor">
+                  <input formControlName="name" type="text" class="form-control mb-2" id="inputSizeName" title="Wybierz rozmiar">
                   <div class="d-flex justify-content-end align-items-end mt-3">
                     <button type="button" class="btn btn-sm btn-outline-danger" (click)="returnToProductSummary()"><i class="bi bi-x-circle-fill"></i></button>
                     <button type="submit" class="btn btn-sm btn-outline-primary ms-1" [disabled]="!newSizeForm.valid">Wybierz <i class="bi bi-palette"></i></button>

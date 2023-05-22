@@ -6,6 +6,8 @@ import {environment} from "../../environments/environment";
 import {GenericPageModel} from "../model/generic-page.model";
 import {CategoryModel} from "./category.service";
 import {PictureMetadata} from "./picture-service";
+import {ColorModel} from "./color.service";
+import {SizeModel} from "./size.service";
 
 export interface ProductModel {
   id: string;
@@ -16,7 +18,18 @@ export interface ProductModel {
   category: CategoryModel;
   mainPicture?: PictureMetadata;
   allPictures?: PictureMetadata[];
+}
 
+export interface ProductItemModel {
+  product: ProductModel;
+  id: string;
+  serialNumber: string;
+  color?: ColorModel;
+  isPromoted: boolean;
+  status: string;
+  size?: SizeModel;
+  availableQuantity: number,
+  price?: {id: string, basePrice: number, vatRate: number, currentDiscount: number}
 }
 
 @Injectable({providedIn: "root"})
@@ -25,7 +38,7 @@ export class ProductService {
 
   constructor(private http: HttpClient, private errorService: ErrorHandleService) {}
 
-  postNewProduct(productNew: {id? : string, name: string, description: string, categoryId: string}): Observable<{name: string, description: string, categoryId: string}>  {
+  postNewProduct(productNew: {id? : string, name: string, description: string, categoryId: string}): Observable<{name: string, description: string, categoryId: string}> {
     return this.http.post<{name: string, description: string, categoryId: string}>(
       environment.apiUrl + 'product',
       productNew
@@ -34,7 +47,25 @@ export class ProductService {
     );
   }
 
-  updateProduct(id: string, editedProduct: {isPublished? : boolean, name: string, description: string, categoryId: string}): Observable<ProductModel>  {
+  postNewItem(itemNew: {
+    productId: string,
+    serialNumber: string,
+    colorId: string,
+    sizeId: string,
+    isPromoted: boolean,
+    price: number,
+    discountRate: number,
+    quantity: number
+  }): Observable<ProductItemModel> {
+    return this.http.post<ProductItemModel>(
+      environment.apiUrl + 'product/item',
+      itemNew
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  updateProduct(id: string, editedProduct: {isPublished? : boolean, name: string, description: string, categoryId: string}): Observable<ProductModel> {
     return this.http.put<ProductModel>(
       environment.apiUrl + 'product/' + id,
       editedProduct
