@@ -1,10 +1,11 @@
 import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {ProductModel, ProductService} from "../service/product.service";
+import {ProductItemModel, ProductModel, ProductService} from "../service/product.service";
 import {ColorModel, ColorService} from "../service/color.service";
 import {SizeModel, SizeService} from "../service/size.service";
 import {ErrorHandleService} from "../service/error-handle.service";
+import {ToastNotificationService} from "../service/toast-notification.service";
 
 @Component({
   selector: 'app-panel-product-whs',
@@ -29,7 +30,15 @@ export class PanelProductWhsComponent implements OnInit, OnDestroy {
   newSizeForm: FormGroup;
   searchTimer: any;
   errorSub: Subscription;
+  loadedItems: ProductItemModel[] = [];
+  selectedItem: ProductItemModel | undefined;
   editedProduct: ProductModel | undefined;
+  newQty: number | undefined;
+  newQtyModeStorno = false;
+  newPrice: number | undefined;
+  stopLoadingSub: Subscription;
+  newDiscount = 0;
+  skuRemovalMode = false;
   @Output('edited') editedEmitter: EventEmitter<ProductModel> = new EventEmitter<ProductModel>();
   @ViewChild('closeModal') closeModalButton: ElementRef;
 
@@ -37,12 +46,17 @@ export class PanelProductWhsComponent implements OnInit, OnDestroy {
     private productService: ProductService,
     private colorService: ColorService,
     private sizeService: SizeService,
-    private errorService: ErrorHandleService
+    private errorService: ErrorHandleService,
+    private toasts: ToastNotificationService
   ) {}
 
   ngOnInit() {
+    this.isLoadingForm = true;
     this.errorSub = this.errorService.errorMessageSubject.subscribe(e => {
       this.errorMessage = e;
+      this.isLoadingForm = false;
+    });
+    this.stopLoadingSub = this.errorService.stopLoadingSubject.subscribe(() => {
       this.isLoadingForm = false;
     });
     this.newSkuForm = new FormGroup({
@@ -56,6 +70,10 @@ export class PanelProductWhsComponent implements OnInit, OnDestroy {
     });
     this.editedProductSub = this.productService.editedProductSubject.subscribe(edited => {
       this.editedProduct = edited;
+      this.productService.getProductItems(this.editedProduct!.id).subscribe(items => {
+        this.loadedItems = items;
+        this.isLoadingForm = false;
+      });
     });
     this.editedColorSub = this.newSkuForm.controls['color'].valueChanges.subscribe(val => {
       if(!!this.selectedColor && this.selectedColor.colorName !== val) {
@@ -85,6 +103,7 @@ export class PanelProductWhsComponent implements OnInit, OnDestroy {
     this.editedColorSub.unsubscribe();
     this.sizeSearchSub.unsubscribe();
     this.errorSub.unsubscribe();
+    this.closeModalButton.nativeElement.click();
   }
 
   handleCloseModal() {
@@ -157,7 +176,7 @@ export class PanelProductWhsComponent implements OnInit, OnDestroy {
       price: this.newSkuForm.controls['price'].value,
       quantity: this.newSkuForm.controls['price'].value
     }).subscribe(newItem => {
-      //todo: dodać logikę dodawania nowego do istniejącej listy
+      this.loadedItems.push(newItem);
       this.isLoadingForm = false;
       this.currentMode = 'summary';
     });
@@ -230,5 +249,101 @@ export class PanelProductWhsComponent implements OnInit, OnDestroy {
         this.foundSizes = searchResults;
       });
     }, 400);
+  }
+
+  handleSelectItemSelection(item: ProductItemModel) {
+    this.selectedItem = item;
+    this.newDiscount = 0;
+    this.newPrice = undefined;
+    this.newQty = undefined;
+  }
+
+  handleDeleteItem(item: ProductItemModel, event: Event) {
+    event.preventDefault();
+    if(item.orderedQuantity! > 0) {
+      this.errorMessage = 'Nie można usunąć SKU, gdy istnieje niezrealizowane zamówienie zawierające to SKU. Zrealizuj zamówienie, a następnie usuń SKU.';
+    }
+    this.skuRemovalMode = true;
+  }
+
+  handleActivateItem(item: ProductItemModel, event: Event) {
+    event.preventDefault();
+    this.productService.activateItem(item.id).subscribe(i => {
+      const itemIndex = this.loadedItems.findIndex(anItem => anItem.id === i.id);
+      this.loadedItems[itemIndex] = i;
+      this.selectedItem = i;
+      this.toasts.showToast({message: 'SKU zostało opublikowane.'});
+    });
+  }
+
+  handleHideItem(item: ProductItemModel, event: Event) {
+    event.preventDefault();
+    this.productService.hideItem(item.id).subscribe(i => {
+      const itemIndex = this.loadedItems.findIndex(anItem => anItem.id === i.id);
+      this.loadedItems[itemIndex] = i;
+      this.selectedItem = i;
+      this.toasts.showToast({message: 'SKU zostało ukryte.'});
+    });
+  }
+
+  showNewQtyForm(storno: boolean, event: Event) {
+    event.preventDefault();
+    this.newQty = 0;
+    this.newQtyModeStorno = storno;
+  }
+
+  showNewPriceForm(event: Event) {
+    event.preventDefault();
+    this.newPrice = this.selectedItem!.price!.grossBasePrice;
+    this.newDiscount = this.selectedItem!.price!.currentDiscount;
+  }
+
+  handleAddRemoveStock() {
+    this.isLoadingForm = true;
+    this.productService.addStock(this.selectedItem!.id, this.newQtyModeStorno ? -this.newQty! : this.newQty!).subscribe(i => {
+      const itemIndex = this.loadedItems.findIndex(anItem => anItem.id === i.id);
+      this.loadedItems[itemIndex] = i;
+      this.selectedItem = i;
+      this.toasts.showToast({message: (this.newQtyModeStorno ? 'Ujęto ' : 'Dodano ') + this.newQty + ' sztuk.'});
+      this.newQty = undefined;
+      this.isLoadingForm = false;
+    });
+  }
+
+  handleAddPrice() {
+    this.isLoadingForm = true;
+    this.productService.addNewPrice(this.selectedItem!.id, this.newPrice!, this.selectedItem?.price?.vatRate!, this.newDiscount).subscribe(i => {
+      const itemIndex = this.loadedItems.findIndex(anItem => anItem.id === i.id);
+      this.loadedItems[itemIndex] = i;
+      this.selectedItem = i;
+      this.toasts.showToast({message: 'Nowa cena została ustalona na ' + this.newPrice + 'zł. Obowiązujący rabat to ' + this.newDiscount + '%'});
+      this.newPrice = undefined;
+      this.newDiscount = 0;
+      this.isLoadingForm = false;
+    });
+  }
+
+  handlePromote(isPromoted: boolean, event: Event) {
+    event.preventDefault();
+    if(isPromoted === this.selectedItem?.isPromoted) {
+      return;
+    }
+    const promoToggleSub = isPromoted ? this.productService.promoteItem(this.selectedItem?.id!) : this.productService.stopPromoItem(this.selectedItem?.id!);
+    promoToggleSub.subscribe(i => {
+      const itemIndex = this.loadedItems.findIndex(anItem => anItem.id === i.id);
+      this.loadedItems[itemIndex] = i;
+      this.selectedItem = i;
+      this.toasts.showToast({message: isPromoted ? 'To SKU będzie promowane na stronie głównej oraz w&nbsp;innych miejscach witryny.' : 'Promowanie w&nbsp;witrynie tego SKU zostało zakończone.'});
+      this.isLoadingForm = false;
+    });
+  }
+
+  performSkuRemoval(item: ProductItemModel) {
+    this.isLoadingForm = true;
+    this.productService.removeItem(item.id).subscribe(() => {
+      this.loadedItems = this.loadedItems.filter(i => i.id !== item.id);
+      this.toasts.showToast({message: 'SKU zostało usunięte!'});
+      this.isLoadingForm = false;
+    })
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {forkJoin, Observable, Subscription} from "rxjs";
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
 import {ProductModel, ProductService} from "../service/product.service";
@@ -20,6 +20,8 @@ export class PanelProductsImagesComponent implements OnInit, OnDestroy {
   previews: string[] = [];
   mainPictureForm: FormGroup
   errorMessageSub: Subscription;
+  @ViewChild('closeModal') closeModalButton: ElementRef;
+
 
   constructor(private productService: ProductService, private errorService: ErrorHandleService) {
   }
@@ -39,6 +41,7 @@ export class PanelProductsImagesComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.editedProductSub.unsubscribe();
     this.errorMessageSub.unsubscribe();
+    this.closeModalButton.nativeElement.click();
   }
 
   get arrayMain() {

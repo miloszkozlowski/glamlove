@@ -29,7 +29,22 @@ export interface ProductItemModel {
   status: string;
   size?: SizeModel;
   availableQuantity: number,
-  price?: {id: string, basePrice: number, vatRate: number, currentDiscount: number}
+  price?: ProductPriceModel,
+  lowestPriceLast30days?: ProductPriceModel,
+  prices?: ProductPriceModel[],
+  orderedQuantity?: number,
+  soldQuantity?: number,
+  inBasketQuantity?: number
+}
+
+export interface ProductPriceModel {
+  id: string,
+  basePrice: number,
+  vatRate: number,
+  currentDiscount: number
+  grossBasePrice: number
+  discountPrice: number
+  grossDiscountPrice: number
 }
 
 @Injectable({providedIn: "root"})
@@ -38,8 +53,8 @@ export class ProductService {
 
   constructor(private http: HttpClient, private errorService: ErrorHandleService) {}
 
-  postNewProduct(productNew: {id? : string, name: string, description: string, categoryId: string}): Observable<{name: string, description: string, categoryId: string}> {
-    return this.http.post<{name: string, description: string, categoryId: string}>(
+  postNewProduct(productNew: {id? : string, name: string, description: string, categoryId: string}): Observable<ProductModel> {
+    return this.http.post<ProductModel>(
       environment.apiUrl + 'product',
       productNew
     ).pipe(
@@ -74,6 +89,72 @@ export class ProductService {
     );
   }
 
+  addStock(id: string, addedAmount: number): Observable<ProductItemModel> {
+    return this.http.patch<ProductItemModel>(
+      environment.apiUrl + 'product/item/' + id + '/' + addedAmount,
+      {}
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  hideItem(id: string): Observable<ProductItemModel> {
+    return this.http.patch<ProductItemModel>(
+      environment.apiUrl + 'product/item/' + id + '/deactivate',
+      {}
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  addNewPrice(productItemId: string, baseGrossPrice: number, vatRate: number, discountPercentage: number): Observable<ProductItemModel> {
+    return this.http.post<ProductItemModel>(
+      environment.apiUrl + 'product/item/price',
+      {
+        netPrice: baseGrossPrice/(100 + vatRate)*100,
+        discountPercentage,
+        productItemId
+      }
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  activateItem(id: string): Observable<ProductItemModel> {
+    return this.http.patch<ProductItemModel>(
+      environment.apiUrl + 'product/item/' + id + '/activate',
+      {}
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  promoteItem(id: string): Observable<ProductItemModel> {
+    return this.http.patch<ProductItemModel>(
+      environment.apiUrl + 'product/item/' + id + '/promote',
+      {}
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  stopPromoItem(id: string): Observable<ProductItemModel> {
+    return this.http.patch<ProductItemModel>(
+      environment.apiUrl + 'product/item/' + id + '/stop-promo',
+      {}
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+  removeItem(id: string): Observable<any> {
+    return this.http.delete<ProductItemModel>(
+      environment.apiUrl + 'product/item/' + id
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
   getProductPage(pageNo: number): Observable<GenericPageModel<ProductModel>> {
     const urlParams = 'product/page/all/' + pageNo;
       return this.http.get<GenericPageModel<ProductModel>>(
@@ -95,6 +176,15 @@ export class ProductService {
   getProductSearchResults(pageNo: number, searchPhrase: string): Observable<GenericPageModel<ProductModel>> {
     const urlParams = 'product/page/all/' + pageNo + '/' + searchPhrase;
       return this.http.get<GenericPageModel<ProductModel>>(
+        environment.apiUrl + urlParams
+      ).pipe(
+        catchError(this.handleError.bind(this))
+      );
+  }
+
+  getProductItems(productId: string): Observable<ProductItemModel[]> {
+    const urlParams = 'product/' + productId + '/all-items';
+      return this.http.get<ProductItemModel[]>(
         environment.apiUrl + urlParams
       ).pipe(
         catchError(this.handleError.bind(this))

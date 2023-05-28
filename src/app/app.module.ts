@@ -33,6 +33,7 @@ import { PanelProductWhsComponent } from './panel-product-whs/panel-product-whs.
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDividerModule} from "@angular/material/divider";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
     FormsModule,
     BrowserAnimationsModule,
     MatDividerModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatButtonModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TokenInterceptor}

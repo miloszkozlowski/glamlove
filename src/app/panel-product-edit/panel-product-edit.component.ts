@@ -51,6 +51,7 @@ export class PanelProductEditComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.searchSub.unsubscribe;
     this.editedProductSub.unsubscribe();
+    this.closeModalButton.nativeElement.click();
   }
 
   handleSearch(phrase: string) {
@@ -95,7 +96,9 @@ export class PanelProductEditComponent implements OnInit, OnDestroy {
         categoryId: !this.selectedCategory ? '' : this.selectedCategory.id
       })
         .subscribe(saved => {
+          this.editedEmitter.emit(saved);
           this.isLoadingForm = false;
+          this.closeModalButton.nativeElement.click();
           this.productForm.reset({'productCategory': this.selectedCategory?.name});
         });
     } else {

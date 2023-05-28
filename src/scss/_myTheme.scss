@@ -32,3 +32,18 @@ $my-danger: #c26e6e;
   display: inline-block;
   margin-right: 10px;
 }
+.icon-small {
+  font-size: 0.9rem;
+}
+.icon-medium {
+  font-size: 1.8rem;
+}
+.icon-large {
+  font-size: 3rem;
+}
+.table-row-action:hover {
+  background-color: #e1cbe1;
+}
+.table-row-selected {
+  background-color: #ECE3EC;
+}

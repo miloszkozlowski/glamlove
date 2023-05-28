@@ -126,11 +126,21 @@ export class PanelProductsComponent implements AfterContentInit, OnInit, OnDestr
   }
 
   updateEditedProduct(product: ProductModel) {
+    console.log('edited', product);
     const editedProduct = this.productsLoaded.find(p => p.id === product.id);
-    editedProduct!.name = product.name;
-    editedProduct!.description = product.description;
-    editedProduct!.category = product.category;
-    editedProduct!.isPublished = product.isPublished;
+    console.log('found', editedProduct);
+    if(!editedProduct) {
+      this.productsLoaded = [product, ...this.productsLoaded];
+      if(this.canLoadMore) {
+        this.productsLoaded.pop();
+      }
+      console.log('pcs', this.productsLoaded);
+    } else {
+      editedProduct.name = product.name;
+      editedProduct.description = product.description;
+      editedProduct.category = product.category;
+      editedProduct.isPublished = product.isPublished;
+    }
   }
 
   handleImages(id: string, event: Event) {
