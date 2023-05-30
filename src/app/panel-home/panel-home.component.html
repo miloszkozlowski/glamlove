@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="row mt-3">
+    <div class="col-12 ps-0">
+      <div class="card">
+        <div class="card-header">
+          Aktywne zamówienia
+        </div>
+        <div class="card-body">
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-12 col-md-6 ps-0">
+      <div class="card">
+        <div class="card-header">
+          Komunikat na belce
+        </div>
+        <div class="card-body">
+          <div *ngIf="isLoading">
+            <p class="placeholder-glow">
+              <span class="placeholder col-4"></span> <span class="placeholder col-7"></span>
+            </p>
+            <a href="#" tabindex="-1" class="btn btn-primary disabled placeholder col-4 mt-2 me-1"></a>
+            <a href="#" tabindex="-1" class="btn btn-danger disabled placeholder col-1 mt-2"></a>
+          </div>
+          <div *ngIf="!isLoading && !isLoadingComponent && !this.isEditingTopBarMsg">
+            <h3><span class="badge text-bg-warning" *ngIf="!currentTopBarMessage">Brak aktywnego komunikatu</span></h3>
+            <figure *ngIf="!!currentTopBarMessage">
+              <blockquote class="blockquote">
+                <p>{{currentTopBarMessage.body}}</p>
+              </blockquote>
+            </figure>
+            <button class="btn btn-primary me-1" (click)="isEditingTopBarMsg = true;"><i class="bi bi-newspaper"></i>&nbsp;&nbsp;Nowy komunikat</button>
+            <button class="btn btn-danger" (click)="handleDeactivateTopBarMessage()" *ngIf="!!currentTopBarMessage"><i class="bi bi-sign-stop-fill"></i></button>
+          </div>
+          <div *ngIf="!isLoading && !isLoadingComponent && this.isEditingTopBarMsg">
+            <div class="form-floating mb-2">
+              <textarea rows="3" [(ngModel)]="newTopBarMessage" id="newTopBarMsg" class="form-control" placeholder="Nowa wiadomość na belce głównej"></textarea>
+              <label for="newTopBarMsg" class="form-label">Nowa wiadomość na belce głównej</label>
+            </div>
+            <button class="btn btn-primary me-1" [disabled]="!newTopBarMessage" (click)="saveNewTopBarMsg()" type="button"><i class="bi bi-check-lg me-1"></i>&nbsp;&nbsp;Zapisz</button>
+            <button class="btn btn-secondary" (click)="isEditingTopBarMsg = false"><i class="bi bi-x-circle"></i></button>
+          </div>
+          <div *ngIf="isLoadingComponent && isEditingTopBarMsg" class="d-flex justify-content-center align-items-center">
+            <div class="spinner-border text-primary m-5" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

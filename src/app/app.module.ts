@@ -34,6 +34,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatDividerModule} from "@angular/material/divider";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatButtonModule} from "@angular/material/button";
+import { PanelHomeComponent } from './panel-home/panel-home.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import {MatButtonModule} from "@angular/material/button";
     TextTruncatePipe,
     PanelProductsImagesComponent,
     GlamImageComponent,
-    PanelProductWhsComponent
+    PanelProductWhsComponent,
+    PanelHomeComponent
   ],
   imports: [
     BrowserModule,

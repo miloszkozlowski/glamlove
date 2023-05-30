@@ -9,6 +9,7 @@ import {AdminUsersComponent} from "./admin-users/admin-users.component";
 import {PanelComponent} from "./panel/panel.component";
 import {PanelCategoriesComponent} from "./panel-categories/panel-categories.component";
 import {PanelProductsComponent} from "./panel-products/panel-products.component";
+import {PanelHomeComponent} from "./panel-home/panel-home.component";
 
 const routes: Routes = [
   {path: '', component: HomePageComponent},
@@ -20,6 +21,7 @@ const routes: Routes = [
       {path: 'users', component: AdminUsersComponent},
     ]},
   {path: 'panel', component: PanelComponent, canActivate: [authGuard, staffGuard], children: [
+      {path: '', component: PanelHomeComponent},
       {path: 'categories', component: PanelCategoriesComponent},
       {path: 'products', component: PanelProductsComponent},
     ]},
