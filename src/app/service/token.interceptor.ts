@@ -21,7 +21,7 @@ export class TokenInterceptor implements HttpInterceptor {
         if (err.status === 401) {
           this.authService.logout();
           return throwError(() => new Error('Nastąpiło wylogowanie. Zaloguj się ponownie.'));
-        } else if(err.status === 400 && !!err.error) {
+        } else if((err.status === 403 || err.status === 400) && !!err.error) {
           return throwError(() => err);
         }
         return throwError(() => new Error('Niespodziewany błąd: ' + err.status));

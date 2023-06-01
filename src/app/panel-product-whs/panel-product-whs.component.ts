@@ -1,11 +1,12 @@
 import {Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {ProductItemModel, ProductModel, ProductService} from "../service/product.service";
+import {ProductItemModel, ProductService} from "../service/product.service";
 import {ColorModel, ColorService} from "../service/color.service";
 import {SizeModel, SizeService} from "../service/size.service";
 import {ErrorHandleService} from "../service/error-handle.service";
 import {ToastNotificationService} from "../service/toast-notification.service";
+import {ProductModel} from "../model/product.model";
 
 @Component({
   selector: 'app-panel-product-whs',
@@ -71,7 +72,13 @@ export class PanelProductWhsComponent implements OnInit, OnDestroy {
     this.editedProductSub = this.productService.editedProductSubject.subscribe(edited => {
       this.editedProduct = edited;
       this.productService.getProductItems(this.editedProduct!.id).subscribe(items => {
-        this.loadedItems = items;
+        this.loadedItems = items.sort((a, b): number => {
+          const colorNameA = a.color ? a.color.colorName : '';
+          const colorNameB = b.color ? b.color.colorName: '';
+          const sizeNameA = a.size ? a.size.sizeValue : '';
+          const sizeNameB = b.size ? b.size.sizeValue: '';
+          return colorNameA.localeCompare(colorNameB) !== 0 ? colorNameA.localeCompare(colorNameB) : sizeNameA.localeCompare(sizeNameB);
+        });
         this.isLoadingForm = false;
       });
     });
@@ -79,11 +86,11 @@ export class PanelProductWhsComponent implements OnInit, OnDestroy {
       if(!!this.selectedColor && this.selectedColor.colorName !== val) {
         this.selectedColor = undefined;
         this.newSkuForm.controls['color'].setValue('', {emitEvent: false});
-        if(val.length > 1) {
-          this.handleSearchColor(val)
-        }
       } else {
         this.foundColors = [];
+      }
+      if(val.length > 1) {
+        this.handleSearchColor(val)
       }
     });
     this.editedSizeSub = this.newSkuForm.controls['size'].valueChanges.subscribe(val => {
@@ -174,10 +181,11 @@ export class PanelProductWhsComponent implements OnInit, OnDestroy {
       discountRate: this.newSkuForm.controls['discount'].value,
       isPromoted: this.newSkuForm.controls['promoted'].value,
       price: this.newSkuForm.controls['price'].value,
-      quantity: this.newSkuForm.controls['price'].value
+      quantity: this.newSkuForm.controls['qty'].value
     }).subscribe(newItem => {
       this.loadedItems.push(newItem);
       this.isLoadingForm = false;
+      this.newSkuForm.controls['sku'].reset();
       this.currentMode = 'summary';
     });
   }

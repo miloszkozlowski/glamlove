@@ -1,0 +1,42 @@
+<div class="container" *ngIf="!isPageLoading">
+  <div class="row">
+    <div class="col-sm-3">
+      Filtry
+    </div>
+    <div class="col-sm-9">
+      <h1>{{currentCategory!.name}}</h1>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col px-1" *ngFor="let prod of loadedProducts">
+          <div class="card h-100 pointer" [routerLink]="['/produkt', prod.routeName]">
+            <app-glam-image [thumbnail]="true" [card-image]="true" [picture]="prod.mainPicture!" class="card-img-top"></app-glam-image>
+            <div class="card-body">
+              <h3 class="card-title">{{prod.name}}</h3>
+              <div class="row">
+                <p class="card-text mb-1"><span *ngIf="prod.lowestPrice < prod.highestPrice">od </span>PLN {{prod.lowestPrice}}</p>
+                <h4 class="m-0"><span class="badge text-bg-secondary" *ngIf="prod.isOnSale">S A L E</span>&nbsp;<span class="badge text-bg-secondary" *ngIf="prod.highestDiscount > 0">{{prod.highestDiscount}}% OFF</span></h4>
+              </div>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" *ngIf="prod.allColors.length > 0">
+                <p class="text-help">Dostępne kolory</p>
+                <div class="color-presentation-box" *ngFor="let color of prod.allColors" [ngStyle]="{'background-color': color.colorValue}" [matTooltip]="color.colorName"></div>
+              </li>
+              <li class="list-group-item p-0">
+                <div class="d-grid">
+                  <button mat-flat-button type="button" class="btn btn-primary" [disabled]="!prod.isAvailable"><i class="bi bi-bag-check"></i>&nbsp;Wrzuć do torby</button>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+  <div class="text-center p-3" *ngIf="isPageLoading">
+    <div class="spinner-border text-primary m-5" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</div>

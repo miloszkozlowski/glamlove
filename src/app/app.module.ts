@@ -35,6 +35,11 @@ import {MatDividerModule} from "@angular/material/divider";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatButtonModule} from "@angular/material/button";
 import { PanelHomeComponent } from './panel-home/panel-home.component';
+import { OfferComponent } from './offer/offer.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import { ProductComponent } from './product/product.component';
+import { ScrollViewModule } from '@progress/kendo-angular-scrollview';
+
 
 @NgModule({
   declarations: [
@@ -61,7 +66,9 @@ import { PanelHomeComponent } from './panel-home/panel-home.component';
     PanelProductsImagesComponent,
     GlamImageComponent,
     PanelProductWhsComponent,
-    PanelHomeComponent
+    PanelHomeComponent,
+    OfferComponent,
+    ProductComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +81,9 @@ import { PanelHomeComponent } from './panel-home/panel-home.component';
     BrowserAnimationsModule,
     MatDividerModule,
     MatSlideToggleModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule,
+    ScrollViewModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TokenInterceptor}

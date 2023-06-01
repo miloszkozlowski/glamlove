@@ -1,9 +1,10 @@
 import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {forkJoin, Observable, Subscription} from "rxjs";
 import {FormArray, FormControl, FormGroup} from "@angular/forms";
-import {ProductModel, ProductService} from "../service/product.service";
+import {ProductService} from "../service/product.service";
 import {ErrorHandleService} from "../service/error-handle.service";
 import {PictureMetadata} from "../service/picture-service";
+import {ProductModel} from "../model/product.model";
 
 @Component({
   selector: 'app-panel-products-images',

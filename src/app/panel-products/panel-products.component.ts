@@ -1,9 +1,10 @@
 import {AfterContentInit, Component, OnDestroy, OnInit} from '@angular/core';
-import {ProductModel, ProductService} from "../service/product.service";
+import {ProductService} from "../service/product.service";
 import {CategoryModel, CategoryService} from "../service/category.service";
 import {forkJoin, Observable, Subscription} from "rxjs";
 import {GenericPageModel} from "../model/generic-page.model";
 import {FormControl, FormGroup} from "@angular/forms";
+import {ProductModel} from "../model/product.model";
 
 @Component({
   selector: 'app-panel-products',
@@ -71,9 +72,6 @@ export class PanelProductsComponent implements AfterContentInit, OnInit, OnDestr
     this.productService.getProductPage(0).subscribe(page => {
       this.productsLoaded = page.content;
       this.canLoadMore = !page.last;
-    });
-    this.categoryService.fetchAll().subscribe(cats => {
-
     });
   }
 
@@ -152,7 +150,7 @@ export class PanelProductsComponent implements AfterContentInit, OnInit, OnDestr
     this.productService.editedProductSubject.next(productWhs);
   }
 
-  setPublished(published: boolean, prod: ProductModel, event: Event) {
+  setPublished(published: boolean, prod: ProductModel) {
     this.productService.updateProduct(
       prod.id,
       {isPublished: published, name: prod.name, description: prod.description, categoryId: prod.category.id}

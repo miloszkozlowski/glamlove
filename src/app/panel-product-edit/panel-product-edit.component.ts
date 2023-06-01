@@ -6,7 +6,8 @@ import {
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {CategoryModel, CategoryService} from "../service/category.service";
-import {ProductModel, ProductService} from "../service/product.service";
+import {ProductService} from "../service/product.service";
+import {ProductModel} from "../model/product.model";
 
 @Component({
   selector: 'app-panel-product-edit',

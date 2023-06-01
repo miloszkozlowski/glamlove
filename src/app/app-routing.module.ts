@@ -10,6 +10,8 @@ import {PanelComponent} from "./panel/panel.component";
 import {PanelCategoriesComponent} from "./panel-categories/panel-categories.component";
 import {PanelProductsComponent} from "./panel-products/panel-products.component";
 import {PanelHomeComponent} from "./panel-home/panel-home.component";
+import {OfferComponent} from "./offer/offer.component";
+import {ProductComponent} from "./product/product.component";
 
 const routes: Routes = [
   {path: '', component: HomePageComponent},
@@ -25,7 +27,10 @@ const routes: Routes = [
       {path: 'categories', component: PanelCategoriesComponent},
       {path: 'products', component: PanelProductsComponent},
     ]},
-  {path: '**', component: NotFoundComponent}
+  {path: 'oferta/:catRouteName', component: OfferComponent},
+  {path: 'produkt/:prodRouteName', component: ProductComponent},
+  {path: '404', component: NotFoundComponent},
+  {path: '**', redirectTo: '/404'}
 ];
 
 @NgModule({

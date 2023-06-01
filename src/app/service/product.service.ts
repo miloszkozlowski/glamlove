@@ -4,21 +4,10 @@ import {catchError, Observable, Subject, throwError} from "rxjs";
 import {ErrorHandleService} from "./error-handle.service";
 import {environment} from "../../environments/environment";
 import {GenericPageModel} from "../model/generic-page.model";
-import {CategoryModel} from "./category.service";
 import {PictureMetadata} from "./picture-service";
 import {ColorModel} from "./color.service";
 import {SizeModel} from "./size.service";
-
-export interface ProductModel {
-  id: string;
-  name: string;
-  description: string;
-  isPublished: boolean;
-  status: string;
-  category: CategoryModel;
-  mainPicture?: PictureMetadata;
-  allPictures?: PictureMetadata[];
-}
+import {ProductModel} from "../model/product.model";
 
 export interface ProductItemModel {
   product: ProductModel;
