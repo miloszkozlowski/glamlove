@@ -1,2 +1,26 @@
-<div>
+<div id="mainCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#mainCarousel" *ngFor="let item of items; let i = index" [attr.data-bs-slide-to]="i" [ngClass]="{'active': currentSlideIndex === i}"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active" *ngFor="let item of items; let i = index" [ngClass]="{'active': i === currentSlideIndex}">
+      <img [src]="item.originUrl" class="d-block w-100" alt="...">
+      <div class="carousel-caption d-none d-md-block mb-2">
+        <h1>Już lato!</h1>
+        <p class="fs-5 fw-lighter">Kup swetr żeby ci dupa nie marzła</p>
+        <button class="btn btn-primary btn-lg">Wrzuć do torby&nbsp;&nbsp;<i class="bi bi-bag-check"></i></button>
+      </div>
+      <div class="carousel-caption d-block d-md-none mb-2">
+        <button class="btn btn-primary btn-lg"><i class="bi bi-bag-check mx-5"></i></button>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 </div>

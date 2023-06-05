@@ -38,7 +38,6 @@ import { PanelHomeComponent } from './panel-home/panel-home.component';
 import { OfferComponent } from './offer/offer.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { ProductComponent } from './product/product.component';
-import { ScrollViewModule } from '@progress/kendo-angular-scrollview';
 
 
 @NgModule({
@@ -83,7 +82,6 @@ import { ScrollViewModule } from '@progress/kendo-angular-scrollview';
     MatSlideToggleModule,
     MatButtonModule,
     MatTooltipModule,
-    ScrollViewModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TokenInterceptor}
