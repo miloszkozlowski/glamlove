@@ -38,6 +38,7 @@ import { PanelHomeComponent } from './panel-home/panel-home.component';
 import { OfferComponent } from './offer/offer.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { ProductComponent } from './product/product.component';
+import { OffcanvasMenuComponent } from './offcanvas-menu/offcanvas-menu.component';
 
 
 @NgModule({
@@ -67,7 +68,8 @@ import { ProductComponent } from './product/product.component';
     PanelProductWhsComponent,
     PanelHomeComponent,
     OfferComponent,
-    ProductComponent
+    ProductComponent,
+    OffcanvasMenuComponent
   ],
   imports: [
     BrowserModule,

@@ -11,6 +11,9 @@
         <li class="nav-item mx-4" *ngFor="let cat of mainCategories">
           <a class="nav-link" [routerLink]="['/oferta', cat.routeName]">{{cat.name}}</a>
         </li>
+        <li class="nav-item mx-4">
+          <a class="nav-link" href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu">Wszystkie Kategorie</a>
+        </li>
       </ul>
       <span class="navbar-text">
         <button class="btn">
