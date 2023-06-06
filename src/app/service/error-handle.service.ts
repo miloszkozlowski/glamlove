@@ -28,6 +28,8 @@ export class ErrorHandleService {
         httpError.error.errorDesc.forEach((e: string) => message += ' ' + e + '.');
       }
       this.errorMessageSubject.next(message);
+    } else if (httpError.error?.errorCode === 'BAD_REQUEST') {
+      this.errorMessageSubject.next(httpError.error?.errorDesc[0]);
     } else if (!!httpError.error?.errorDesc && httpError.error.errorDesc > 0) {
       if (httpError.error.errorDesc?.length > 0) {
         this.toastService.showToast({

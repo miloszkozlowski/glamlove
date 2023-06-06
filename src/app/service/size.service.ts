@@ -7,6 +7,7 @@ import {environment} from "../../environments/environment";
 export interface SizeModel {
   sizeValue: string;
   id: string;
+  order?: number
 }
 
 @Injectable({providedIn: "root"})
@@ -23,6 +24,15 @@ export class SizeService {
     );
   }
 
+  updateSizeOrder(sizes: SizeModel[]): Observable<SizeModel[]>  {
+    return this.http.put<SizeModel[]>(
+      environment.apiUrl + 'size',
+      sizes
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
   handleError(error: HttpErrorResponse) {
     if(!!error) {
       return throwError(() => new Error(this.errorService.handleErrorMessage(error)));
@@ -33,6 +43,14 @@ export class SizeService {
   searchByNamePhrase(phrase: string): Observable<SizeModel[]> {
     return this.http.get<SizeModel[]>(
       environment.apiUrl + 'size/search/' + phrase.trim()
+    ).pipe(
+      catchError(this.handleError.bind(this))
+    );
+  }
+
+ getAllActive(): Observable<SizeModel[]> {
+    return this.http.get<SizeModel[]>(
+      environment.apiUrl + 'size'
     ).pipe(
       catchError(this.handleError.bind(this))
     );

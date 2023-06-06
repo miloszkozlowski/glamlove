@@ -12,6 +12,7 @@ import {PanelProductsComponent} from "./panel-products/panel-products.component"
 import {PanelHomeComponent} from "./panel-home/panel-home.component";
 import {OfferComponent} from "./offer/offer.component";
 import {ProductComponent} from "./product/product.component";
+import {PanelSizesColorsComponent} from "./panel-sizes-colors/panel-sizes-colors.component";
 
 const routes: Routes = [
   {path: '', component: HomePageComponent},
@@ -25,12 +26,13 @@ const routes: Routes = [
   {path: 'panel', component: PanelComponent, canActivate: [authGuard, staffGuard], children: [
       {path: '', component: PanelHomeComponent},
       {path: 'categories', component: PanelCategoriesComponent},
+      {path: 'sizes-and-colors', component: PanelSizesColorsComponent},
       {path: 'products', component: PanelProductsComponent},
     ]},
   {path: 'oferta/:catRouteName', component: OfferComponent},
   {path: 'produkt/:prodRouteName', component: ProductComponent},
   {path: '404', component: NotFoundComponent},
-  {path: '**', redirectTo: '/404'}
+  {path: '**', redirectTo: '/404', title: 'Oj oj! Nie ma takiej strony!'}
 ];
 
 @NgModule({

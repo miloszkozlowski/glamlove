@@ -1,0 +1,17 @@
+<div class="row mt-2">
+  <div class="col-12 col-md-6">
+    <h2>Rozmiary</h2>
+    <p>Możesz zmieniać kolejność przeciągając kafelki. Możesz także usuwać istniejące rozmiary.</p>
+    <div cdkDropList class="order-list" (cdkDropListDropped)="drop($event)">
+      <div class="order-box" *ngFor="let size of loadedSizes" cdkDrag [cdkDragData]="size">{{size.sizeValue}}</div>
+    </div>
+  </div>
+  <div class="col-0 col-md-1">
+    <mat-divider [vertical]="true" class="d-none d-md-block mt-5 pt-5 mb-3" style="height: 95%"></mat-divider>
+  </div>
+  <div class="col-12 col-md-5">
+    <h2>Kolory</h2>
+    <p>Możesz usuwać istniejące kolory.</p>
+  </div>
+</div>
+<div class="row py-3"><p class="text-help">Pamiętaj, że usuwanie rozmiarów i kolorów powoduje, że oznaczone nimi produkty nie będą widoczne w sklepie.</p></div>

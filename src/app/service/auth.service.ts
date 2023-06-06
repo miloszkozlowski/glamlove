@@ -4,6 +4,7 @@ import {UserAuthDataModel} from "../model/user-auth-data.model";
 import {UserModel} from "../model/user.model";
 import {BehaviorSubject} from "rxjs";
 import {Router} from "@angular/router";
+import {ToastNotificationService} from "./toast-notification.service";
 
 @Injectable({providedIn: "root"})
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
   private _isAuthenticated: boolean;
   private jwtService: JwtHelperService;
   private logoutTimer: any;
-  constructor(private router: Router) {
+  constructor(private router: Router, private toast: ToastNotificationService) {
     this.jwtService = new JwtHelperService(this.authenticatedUserSubject.getValue().jwtToken)
   }
 
@@ -30,7 +31,10 @@ export class AuthService {
     localStorage.removeItem('userData');
     this._isAuthenticated = false;
     this.authenticatedUserSubject.next(UserModel.getGuest());
-    this.router.navigate(['/login']).then(() => console.warn('Logged out'));
+    this.router.navigate(['/login']).then(() => {
+      console.warn('Logged out');
+      this.toast.showToast({message: 'Zostałeś wylogowany dla Twojego bezpieczeństwa.', sticky: true, variant: 'secondary'})
+    });
   }
 
   autologin() {

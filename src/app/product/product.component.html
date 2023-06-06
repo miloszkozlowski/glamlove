@@ -1,1 +1,73 @@
-<p>product works!</p>
+<div class="row" *ngIf="!!currentProduct">
+  <div class="col">
+    <h2>{{currentProduct.name}}</h2>
+    <p>{{currentProduct.category.name}} </p>
+  </div>
+</div>
+<div class="row" *ngIf="!!currentProduct">
+  <div class="col-12 col-md-6 col-lg-8">
+    <app-glam-image *ngIf="!!currentPic" [picture]="currentPic" (click)="zoomIn = true"></app-glam-image>
+    <carousel>
+      <div class="carousel-cell mt-2 pointer" *ngFor="let p of currentProduct.allPictures" (click)="currentPic = p">
+        <img [src]="getThumbUrl(p)" [alt]="currentProduct.name">
+      </div>
+    </carousel>
+  </div>
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card mt-4 mt-md-0">
+      <div class="card-body">
+        <h1 class="fw-light">
+          <s class="fs-3" *ngIf="currentProductItem.price!.currentDiscount > 0">
+          {{currentProductItem.price!.grossBasePrice}}
+          </s>
+          PLN {{currentProductItem.price!.grossDiscountPrice}}
+        </h1>
+        <p><small *ngIf="!!currentProductItem.serialNumber"
+                  class="text-help">SKU: {{currentProductItem.serialNumber}}</small></p>
+        <div *ngIf="sizes.length > 0">
+          <p><strong>Rozmiary</strong></p>
+          <button class="btn btn-sm" [ngClass]="{'btn-secondary': this.currentProductItem.size!.id === size.id}"
+                  *ngFor="let size of sizes">{{size.sizeValue}}</button>
+        </div>
+        <div class="mt-4" *ngIf="colors.length > 0">
+          <p><strong>Kolor: </strong>{{currentProductItem.color!.colorName}}</p>
+          <div>
+            <button
+              class="btn p-2"
+              type="button"
+              [matTooltip]="color.colorName"
+              *ngFor="let color of colors"
+              (click)="handleNewColor(color)"
+              [ngClass]="{'btn-color-active': this.currentProductItem.color!.id === color.id}"
+            >
+              <div class="color-presentation-box me-0" [ngStyle]="{'background-color': color.colorValue}"></div>
+            </button>
+          </div>
+        </div>
+        <div class="my-4">
+          <p class="text-danger fs-5 fw-bold" *ngIf="!currentProduct.isAvailable">Niedostępne</p>
+        </div>
+        <div class="d-grid gap-2 mt-3">
+          <button mat-flat-button type="button" class="btn btn-primary" [disabled]="!currentProduct.isAvailable"><i
+            class="bi bi-bag-check"></i>&nbsp;Wrzuć do torby
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card mt-3 d-none d-md-block">
+      <div class="card-body">
+        <h4 class="fw-light">Może Ci się spodoba także...</h4>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="!!currentProduct">
+  <div class="col">
+    <p class="mt-4 mt-md-2">
+      Lorem ipsum lorem bleh. Lorem ipsum lorem bleh. Lorem ipsum lorem bleh.Lorem ipsum lorem bleh. Lorem ipsum lorem
+      bleh.Lorem ipsum lorem bleh.Lorem ipsum lorem bleh.Lorem ipsum lorem bleh.Lorem ipsum lorem bleh. Lorem ipsum
+      lorem bleh. Lorem ipsum lorem bleh. Lorem ipsum lorem bleh. Lorem ipsum lorem bleh. Lorem ipsum lorem bleh.
+    </p>
+  </div>
+</div>

@@ -39,6 +39,9 @@ import { OfferComponent } from './offer/offer.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { ProductComponent } from './product/product.component';
 import { OffcanvasMenuComponent } from './offcanvas-menu/offcanvas-menu.component';
+import {IvyCarouselModule} from "angular-responsive-carousel";
+import { PanelSizesColorsComponent } from './panel-sizes-colors/panel-sizes-colors.component';
+import {CdkDrag, CdkDropList} from "@angular/cdk/drag-drop";
 
 
 @NgModule({
@@ -69,7 +72,8 @@ import { OffcanvasMenuComponent } from './offcanvas-menu/offcanvas-menu.componen
     PanelHomeComponent,
     OfferComponent,
     ProductComponent,
-    OffcanvasMenuComponent
+    OffcanvasMenuComponent,
+    PanelSizesColorsComponent
   ],
   imports: [
     BrowserModule,
@@ -84,6 +88,9 @@ import { OffcanvasMenuComponent } from './offcanvas-menu/offcanvas-menu.componen
     MatSlideToggleModule,
     MatButtonModule,
     MatTooltipModule,
+    IvyCarouselModule,
+    CdkDropList,
+    CdkDrag,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, multi: true, useClass: TokenInterceptor}
